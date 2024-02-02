@@ -1,4 +1,4 @@
-export default function Profile() {
+export default function Users() {
     return (
         <div>
             TODO: Create Profile Page
