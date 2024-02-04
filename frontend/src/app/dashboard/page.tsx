@@ -5,6 +5,11 @@ import { useState } from 'react';
 export default function Dashboard() {
     const [sortType, setSortType] = useState('latest');
 
+    const onSortTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortType(e.target.value);
+        // TODO: Fetch data based on sort type
+    };
+
     return (
         <main>
             <h1 className="text-center text-4xl pt-8 font-semibold text-indigo-500">Explore Art</h1>
@@ -15,16 +20,15 @@ export default function Dashboard() {
                     </label>
                     <select className="p-2 text-indigo-500 font-semibold"
                         value={sortType}
-                        onChange={(e) => setSortType(e.target.value)}
-                    >
+                        onChange={onSortTypeChange}>
                         <option value="latest">Latest</option>
                         <option value="most-liked">Most Liked</option>
                     </select>
                 </div>
             </div>
             <div className="flex justify-center mt-2">
-                <div className="grid grid-cols-5 w-3/4 mx-2 space-x-4 mt-8">
-                    <div className="items-center flex flex-col justify-center shadow-lg">
+                <div className="grid grid-cols-5 w-3/4 mx-2 space-x-4 mt-8 space-y-4">
+                    <div className="items-center flex flex-col justify-center shadow">
                         <div className="flex flex-col items-center py-4">
                             <a href="/dashboard" className="mb-2">
                                 <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
@@ -36,7 +40,7 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
-                    <div className="items-center flex flex-col justify-center shadow-lg">
+                    <div className="items-center flex flex-col justify-center shadow">
                         <div className="flex flex-col items-center py-4">
                             <a href="/dashboard" className="mb-2">
                                 <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
@@ -48,7 +52,7 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
-                    <div className="items-center flex flex-col justify-center shadow-lg">
+                    <div className="items-center flex flex-col justify-center shadow">
                         <div className="flex flex-col items-center py-4">
                             <a href="/dashboard" className="mb-2">
                                 <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
@@ -60,7 +64,7 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
-                    <div className="items-center flex flex-col justify-center shadow-lg">
+                    <div className="items-center flex flex-col justify-center shadow">
                         <div className="flex flex-col items-center py-4">
                             <a href="/dashboard" className="mb-2">
                                 <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
@@ -72,7 +76,7 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
-                    <div className="items-center flex flex-col justify-center shadow-lg">
+                    <div className="items-center flex flex-col justify-center shadow">
                         <div className="flex flex-col items-center py-4">
                             <a href="/dashboard" className="mb-2">
                                 <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
@@ -84,7 +88,7 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
-                    <div className="items-center flex flex-col justify-center shadow-lg">
+                    <div className="items-center flex flex-col justify-center shadow">
                         <div className="flex flex-col items-center py-4">
                             <a href="/dashboard" className="mb-2">
                                 <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
