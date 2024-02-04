@@ -1,4 +1,6 @@
 "use client";
+import ArtCard from '@/lib/components/client/artCard';
+import { Artwork } from '@/lib/types';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -8,6 +10,16 @@ export default function Dashboard() {
     const onSortTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSortType(e.target.value);
         // TODO: Fetch data based on sort type
+    };
+
+    const artwork: Artwork = {
+        id: 100,
+        title: 'Some Artwork',
+        authorId: 101,
+        authorName: 'Author Name',
+        promptId: 102,
+        promptText: 'Some Prompt Text',
+        imageUrl: '/path/to/image.jpg'
     };
 
     return (
@@ -28,78 +40,13 @@ export default function Dashboard() {
             </div>
             <div className="flex justify-center mt-2">
                 <div className="grid grid-cols-5 w-3/4 mx-2 space-x-4 mt-8 space-y-4">
-                    <div className="items-center flex flex-col justify-center shadow">
-                        <div className="flex flex-col items-center py-4">
-                            <a href="/dashboard" className="mb-2">
-                                <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
-                            </a>
-                            <h3 className="bg-yellow-100 text-xl py-1 w-full text-center">Some Artwork</h3>
-                            <div className="mb-2 text-center">
-                                <p>By: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Author Name</a></p>
-                                <p>For: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Prompt Name</a></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="items-center flex flex-col justify-center shadow">
-                        <div className="flex flex-col items-center py-4">
-                            <a href="/dashboard" className="mb-2">
-                                <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
-                            </a>
-                            <h3 className="bg-yellow-100 text-xl py-1 w-full text-center">Some Artwork</h3>
-                            <div className="mb-2 text-center">
-                                <p>By: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Author Name</a></p>
-                                <p>For: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Prompt Name</a></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="items-center flex flex-col justify-center shadow">
-                        <div className="flex flex-col items-center py-4">
-                            <a href="/dashboard" className="mb-2">
-                                <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
-                            </a>
-                            <h3 className="bg-yellow-100 text-xl py-1 w-full text-center">Some Artwork</h3>
-                            <div className="mb-2 text-center">
-                                <p>By: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Author Name</a></p>
-                                <p>For: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Prompt Name</a></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="items-center flex flex-col justify-center shadow">
-                        <div className="flex flex-col items-center py-4">
-                            <a href="/dashboard" className="mb-2">
-                                <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
-                            </a>
-                            <h3 className="bg-yellow-100 text-xl py-1 w-full text-center">Some Artwork</h3>
-                            <div className="mb-2 text-center">
-                                <p>By: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Author Name</a></p>
-                                <p>For: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Prompt Name</a></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="items-center flex flex-col justify-center shadow">
-                        <div className="flex flex-col items-center py-4">
-                            <a href="/dashboard" className="mb-2">
-                                <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
-                            </a>
-                            <h3 className="bg-yellow-100 text-xl py-1 w-full text-center">Some Artwork</h3>
-                            <div className="mb-2 text-center">
-                                <p>By: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Author Name</a></p>
-                                <p>For: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Prompt Name</a></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="items-center flex flex-col justify-center shadow">
-                        <div className="flex flex-col items-center py-4">
-                            <a href="/dashboard" className="mb-2">
-                                <Image src="" alt="" className="h-48 w-48 hover:scale-105 transition duration-150" />
-                            </a>
-                            <h3 className="bg-yellow-100 text-xl py-1 w-full text-center">Some Artwork</h3>
-                            <div className="mb-2 text-center">
-                                <p>By: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Author Name</a></p>
-                                <p>For: <a href="/dashboard" className="text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">Prompt Name</a></p>
-                            </div>
-                        </div>
-                    </div>
+                    <ArtCard artwork={artwork} />
+                    <ArtCard artwork={artwork} />
+                    <ArtCard artwork={artwork} />
+                    <ArtCard artwork={artwork} />
+                    <ArtCard artwork={artwork} />
+                    <ArtCard artwork={artwork} />
+                    <ArtCard artwork={artwork} />
                 </div>
             </div>
         </main>
