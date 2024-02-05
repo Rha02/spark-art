@@ -6,4 +6,5 @@ export type Artwork = {
     promptId: number;
     promptText: string;
     imageUrl: string;
+    likes: number;
 }

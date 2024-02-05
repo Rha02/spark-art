@@ -1,25 +1,29 @@
 "use client";
 import ArtCard from '@/lib/components/client/artCard';
 import { Artwork } from '@/lib/types';
-import Image from 'next/image';
-import { useState } from 'react';
+import { ArtRepo } from '@/repo';
+import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
     const [sortType, setSortType] = useState('latest');
+    const [artworks, setArtworks] = useState<Artwork[]>([]);
+
+    useEffect(() => {
+        if (sortType === 'latest') {
+            ArtRepo.getLatestArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
+        } else if (sortType === 'most-liked') {
+            ArtRepo.getMostLikedArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
+        }
+    }, []);
 
     const onSortTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSortType(e.target.value);
         // TODO: Fetch data based on sort type
-    };
-
-    const artwork: Artwork = {
-        id: 100,
-        title: 'Some Artwork',
-        authorId: 101,
-        authorName: 'Author Name',
-        promptId: 102,
-        promptText: 'Some Prompt Text',
-        imageUrl: '/path/to/image.jpg'
+        if (e.target.value === 'latest') {
+            ArtRepo.getLatestArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
+        } else if (e.target.value === 'most-liked') {
+            ArtRepo.getMostLikedArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
+        }
     };
 
     return (
@@ -40,13 +44,7 @@ export default function Dashboard() {
             </div>
             <div className="flex justify-center mt-2">
                 <div className="grid grid-cols-5 w-3/4 mx-2 space-x-4 mt-8 space-y-4">
-                    <ArtCard artwork={artwork} />
-                    <ArtCard artwork={artwork} />
-                    <ArtCard artwork={artwork} />
-                    <ArtCard artwork={artwork} />
-                    <ArtCard artwork={artwork} />
-                    <ArtCard artwork={artwork} />
-                    <ArtCard artwork={artwork} />
+                    {artworks.map(artwork => <ArtCard key={artwork.id} artwork={artwork} />) }
                 </div>
             </div>
         </main>
