@@ -1,7 +1,9 @@
+import { UserRepo } from "@/repo";
 import { cookies } from "next/headers";
-import React, { AnchorHTMLAttributes } from "react";
+import Image from "next/image";
+import React from "react";
 
-export default function Navbar() {
+export default async function Navbar() {
     const navlinkStyle = "hover:bg-indigo-500 hover:text-white px-2 py-1 rounded-lg transition ease-in-out duration-250";
     /**
      * NavlinkProps is a helper type for the Navlink component.
@@ -30,6 +32,8 @@ export default function Navbar() {
     // Check if user is authenticated
     const isAuthenticated = authtoken !== undefined;
 
+    const user = isAuthenticated ? await UserRepo.getAuthUser(authtoken) : null;
+
     return (
         <nav className="bg-indigo-600 text-indigo-50 flex justify-between px-16 py-4 items-center">
             <h1 className="text-2xl font-semibold">
@@ -40,6 +44,11 @@ export default function Navbar() {
                 <Navlink link="/prompts" name="Prompts" />
                 {isAuthenticated && <Navlink link="/users/1" name="Profile" />}
                 {isAuthenticated && <Navlink link="/api/logout" name="Logout" />}
+                {isAuthenticated &&
+                    <div>
+                        <Image src={user ? user.profileImageUrl : ""} alt="" width={50} height={50} className="h-8 w-8 bg-blue-500 rounded-full" />
+                    </div>
+                }
                 {!isAuthenticated && <Navlink link="/login" name="Login" />}
                 {!isAuthenticated && <Navlink link="/register" name="Register" />}
             </ul>
