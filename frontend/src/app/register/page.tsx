@@ -3,7 +3,7 @@ export default function Register() {
         <main>
             <h1 className="text-center text-4xl pt-8 font-semibold text-indigo-500">Register</h1>
             <div className="flex justify-center mt-4">
-                <form action="" className="flex flex-col items-center justify-center py-8 w-1/2 xl:w-1/4 border-4 space-y-4">
+                <form action="/api/register" method="POST" className="flex flex-col items-center justify-center py-8 w-1/2 xl:w-1/4 border-4 space-y-4" encType="multipart/form-data">
                     <div className="flex flex-col items-center justify-center space-y-1">
                         <label htmlFor="username" className="text-indigo-500 text-lg">Username</label>
                         <input type="text" name="username" id="username" className="border-b-2 border-indigo-500 w-64 text-center bg-gray-100 rounded" />
