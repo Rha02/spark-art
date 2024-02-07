@@ -1,3 +1,4 @@
+import { UserRepo } from "@/repo";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -13,8 +14,10 @@ export async function POST(req: NextRequest) {
 
     const res = NextResponse.redirect(url);
 
+    const authToken = await UserRepo.register(formData);
+
     // set authtoken cookie
-    res.cookies.set("authtoken", "1234", {
+    res.cookies.set("authtoken", authToken, {
         httpOnly: true,
         secure: true,
         path: "/",

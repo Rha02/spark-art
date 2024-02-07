@@ -8,3 +8,10 @@ export type Artwork = {
     imageUrl: string;
     likes: number;
 }
+
+export type User = {
+    id: number;
+    username: string;
+    profileImageUrl: string;
+    createdAt: Date;
+}
