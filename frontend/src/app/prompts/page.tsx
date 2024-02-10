@@ -1,5 +1,7 @@
 "use client";
 
+import { PlusIcon, SearchIcon } from "@/lib/icons";
+
 export default function Prompts() {
     const handleSearch = () => {
         console.log("searching");
@@ -19,8 +21,12 @@ export default function Prompts() {
                             Search
                         </label>
                         <input type="text" className="border-2 border-indigo-500 p-2 w-1/2" name="search" placeholder="Batman looking down into the city" />
-                        <button onClick={handleSearch} className="py-2.5 px-3 bg-indigo-600 hover:bg-indigo-500 transition ease-in-out duration-150 text-white rounded-r-lg">Search</button>
-                        <button className="py-2.5 px-4 ml-1 bg-green-600 hover:bg-green-500 transition ease-in-out duration-150 text-white rounded-lg">+</button>
+                        <button onClick={handleSearch} className="py-3 px-3 bg-indigo-600 hover:bg-indigo-500 transition ease-in-out duration-150 text-white rounded-r-lg">
+                            <SearchIcon width={20} height={20} color="#ffffff" />
+                        </button>
+                        <button onClick={handleCreate} className="py-3 px-3 ml-1 bg-green-600 hover:bg-green-500 transition ease-in-out duration-150 text-white rounded-lg">
+                            <PlusIcon width={20} height={20} color="#ffffff" />
+                        </button>
                     </div>
                     <div>
                         <label htmlFor="" className="font-bold text-gray-800">
