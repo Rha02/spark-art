@@ -1,14 +1,36 @@
 "use client";
 
 import { PlusIcon, SearchIcon } from "@/lib/icons";
+import { Prompt } from "@/lib/types";
+import { PromptRepo } from "@/repo";
+import { useEffect, useState } from "react";
 
 export default function Prompts() {
+    const [prompts, setPrompts] = useState<Prompt[]>([]);
+    const [sortType, setSortType] = useState('latest');
+    
+    useEffect(() => {
+        PromptRepo.getPrompts().then(prompts => setPrompts(prompts)).catch(err => console.error(err));
+    }, []);
+
+    const onSortTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortType(e.target.value);
+
+        console.log("TODO: update prompts based on sort type");
+        
+        if (e.target.value === 'latest') {
+            PromptRepo.getPrompts().then(prompts => setPrompts(prompts)).catch(err => console.error(err));
+        } else if (e.target.value === 'most-responses') {
+            PromptRepo.getPrompts().then(prompts => setPrompts(prompts)).catch(err => console.error(err));
+        }
+    };
+
     const handleSearch = () => {
-        console.log("searching");
+        console.log("TODO: search for prompts based on search input");
     };
 
     const handleCreate = () => {
-        console.log("creating");
+        console.log("TODO: create a new prompt and add it to the list of prompts");
     };
 
     return (
@@ -28,14 +50,38 @@ export default function Prompts() {
                             <PlusIcon width={20} height={20} color="#ffffff" />
                         </button>
                     </div>
-                    <div>
-                        <label htmlFor="" className="font-bold text-gray-800">
-                            Sort By:
-                        </label>
+                    <div className="flex w-full justify-center pt-4">
+                        <div className="text-center">
+                            <label htmlFor="" className="font-bold text-gray-800">
+                                Sort By:
+                            </label>
+                            <select className="p-2 text-indigo-500 font-semibold"
+                                value={sortType}
+                                onChange={onSortTypeChange}>
+                                <option value="latest">Latest</option>
+                                <option value="most-responses">Most Responses</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="flex justify-center mt-2">
+                <div className="w-3/4">
+                    <div className="flex justify-between border-b-2 border-indigo-500 p-2 mb-2 space-x-4">
+                        <div className="w-2/5 font-semibold text-gray-800">Prompt</div>
+                        <div className="w-1/5 font-semibold text-gray-800">Creator</div>
+                        <div className="w-1/5 font-semibold text-gray-800">Responses</div>
+                        <div className="w-1/5 font-semibold text-gray-800">Created</div>
+                    </div>
+                    {prompts.map(prompt => (
+                        <a key={prompt.id} href={"/prompts/"+prompt.id} className="flex justify-between p-2 shadow bg-gray-50 mb-4 hover:bg-gray-100 transition ease-in-out duration-150 space-x-4">
+                            <span className="w-2/5">{prompt.text}</span>
+                            <span className="w-1/5">User123</span>
+                            <span className="w-1/5">{prompt.responses}</span>
+                            <span className="w-1/5">{prompt.createdAt.toDateString()}</span>
+                        </a>
+                    ))}
+                </div>
             </div>
         </main>
     );
