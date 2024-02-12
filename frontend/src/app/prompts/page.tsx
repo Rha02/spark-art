@@ -7,9 +7,11 @@ import { useEffect, useState } from "react";
 
 export default function Prompts() {
     const [prompts, setPrompts] = useState<Prompt[]>([]);
+    const [search, setSearch] = useState("");
     const [sortType, setSortType] = useState('latest');
     
     useEffect(() => {
+        console.log("TODO: fetch prompts from the server"); 
         PromptRepo.getPrompts().then(prompts => setPrompts(prompts)).catch(err => console.error(err));
     }, []);
 
@@ -25,12 +27,35 @@ export default function Prompts() {
         }
     };
 
-    const handleSearch = () => {
+    const handleSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
         console.log("TODO: search for prompts based on search input");
+
+        if (!search) return;
+
+        PromptRepo.getPrompts({
+            search: search
+        }).then(prompts => {
+            setPrompts(prompts);
+        }).catch(err => console.error(err));
     };
 
-    const handleCreate = () => {
-        console.log("TODO: create a new prompt and add it to the list of prompts");
+    const handleCreate = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const submitButton = e.target as HTMLButtonElement;
+        submitButton.disabled = true;
+
+        if (!search) {
+            submitButton.disabled = false;
+            return;
+        }
+
+        PromptRepo.createPrompt(search).then(prompt => {
+            setPrompts([prompt, ...prompts]);
+            setSearch("");
+        }).catch(err => {
+            console.error(err);
+        }).finally(() => {
+            submitButton.disabled = false;
+        });
     };
 
     return (
@@ -42,11 +67,11 @@ export default function Prompts() {
                         <label htmlFor="search" className="font-semibold text-gray-800 bg-indigo-600 rounded-l-lg py-2.5 px-3 text-white">
                             Search
                         </label>
-                        <input type="text" className="border-2 border-indigo-500 p-2 w-1/2" name="search" placeholder="Batman looking down into the city" />
-                        <button onClick={handleSearch} className="py-3 px-3 bg-indigo-600 hover:bg-indigo-500 transition ease-in-out duration-150 text-white rounded-r-lg">
+                        <input value={search} onChange={(e) => setSearch(e.target.value)} type="text" className="border-2 border-indigo-500 p-2 w-1/2" name="search" placeholder="Batman looking down into the city" />
+                        <button type="button" onClick={handleSearch} className="py-3 px-3 bg-indigo-600 hover:bg-indigo-500 transition ease-in-out duration-150 text-white rounded-r-lg">
                             <SearchIcon width={20} height={20} color="#ffffff" />
                         </button>
-                        <button onClick={handleCreate} className="py-3 px-3 ml-1 bg-green-600 hover:bg-green-500 transition ease-in-out duration-150 text-white rounded-lg">
+                        <button type="button" onClick={handleCreate} className="py-3 px-3 ml-1 bg-green-600 hover:bg-green-500 transition ease-in-out duration-150 text-white rounded-lg disabled:opacity-75">
                             <PlusIcon width={20} height={20} color="#ffffff" />
                         </button>
                     </div>
@@ -73,8 +98,8 @@ export default function Prompts() {
                         <div className="w-1/5 font-semibold text-gray-800">Responses</div>
                         <div className="w-1/5 font-semibold text-gray-800">Created</div>
                     </div>
-                    {prompts.map(prompt => (
-                        <a key={prompt.id} href={"/prompts/"+prompt.id} className="flex justify-between p-2 shadow bg-gray-50 mb-4 hover:bg-gray-100 transition ease-in-out duration-150 space-x-4">
+                    {prompts.map((prompt, idx) => (
+                        <a key={idx} href={"/prompts/"+prompt.id} className="flex justify-between p-2 shadow bg-gray-50 mb-4 hover:bg-gray-100 transition ease-in-out duration-150 space-x-4">
                             <span className="w-2/5">{prompt.text}</span>
                             <span className="w-1/5">User123</span>
                             <span className="w-1/5">{prompt.responses}</span>

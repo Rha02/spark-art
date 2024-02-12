@@ -1,11 +1,16 @@
 import { Prompt } from "@/lib/types";
 
-type promptRepo = {
-    getPrompts: () => Promise<Prompt[]>;
+type getPromptsFilter = {
+    sortType?: string;
+    search?: string;
+};
+
+type PromptRepo = {
+    getPrompts: (filter?: getPromptsFilter) => Promise<Prompt[]>;
     createPrompt: (text: string) => Promise<Prompt>;
 }
 
-const NewPromptRepo = (host: string): promptRepo => {
+const NewPromptRepo = (host: string): PromptRepo => {
     console.log('prompt host: ', host);
 
     const sampleData: Prompt[] = [
@@ -32,8 +37,9 @@ const NewPromptRepo = (host: string): promptRepo => {
         }
     ];
 
-    const getPrompts = async (): Promise<Prompt[]> => {
-        return sampleData;
+    const getPrompts = async (filter?: getPromptsFilter): Promise<Prompt[]> => {
+        console.log(filter);
+        return [...sampleData];
     };
 
     const createPrompt = async (text: string): Promise<Prompt> => {
