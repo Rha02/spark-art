@@ -9,16 +9,12 @@ export default function Dashboard() {
     const [artworks, setArtworks] = useState<Artwork[]>([]);
 
     useEffect(() => {
-        if (sortType === 'latest') {
-            ArtRepo.getLatestArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
-        } else if (sortType === 'most-liked') {
-            ArtRepo.getMostLikedArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
-        }
+        ArtRepo.getLatestArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
     }, []);
 
     const onSortTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSortType(e.target.value);
-        // TODO: Fetch data based on sort type
+        
         if (e.target.value === 'latest') {
             ArtRepo.getLatestArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
         } else if (e.target.value === 'most-liked') {

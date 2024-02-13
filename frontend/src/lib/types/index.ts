@@ -15,3 +15,11 @@ export type User = {
     profileImageUrl: string;
     createdAt: Date;
 }
+
+export type Prompt = {
+    id: number;
+    text: string;
+    creatorId: number;
+    responses: number;
+    createdAt: Date;
+}

@@ -1,11 +1,11 @@
 import { Artwork } from "@/lib/types";
 
-type artRepo = {
+type ArtRepo = {
     getLatestArtworks: () => Promise<Artwork[]>;
     getMostLikedArtworks: () => Promise<Artwork[]>;
 }
 
-const NewArtRepo = (host: string): artRepo => {
+const NewArtRepo = (host: string): ArtRepo => {
     console.log('art host: ', host);
 
     const sampleData: Artwork[] = [{
