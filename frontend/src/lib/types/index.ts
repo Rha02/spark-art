@@ -22,6 +22,8 @@ export type Prompt = {
     id: number;
     text: string;
     creatorId: number;
+    creatorName: string;
+    creatorIconUrl: string;
     responses: number;
     createdAt: Date;
 }

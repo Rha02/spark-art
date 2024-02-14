@@ -1,7 +1,7 @@
 "use client";
 
 import ArtCard from "@/lib/components/client/artCard";
-import { Artwork, Prompt, User } from "@/lib/types";
+import { Artwork, Prompt } from "@/lib/types";
 import { ArtRepo, PromptRepo } from "@/repo";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -17,14 +17,9 @@ export default function Prompt({ params }: { params: { id: string }}) {
         id: 0,
         text: "",
         creatorId: 0,
+        creatorName: "",
+        creatorIconUrl: "",
         responses: 0,
-        createdAt: new Date()
-    });
-
-    const promptAuthor = useRef<User>({
-        id: 0,
-        username: "TheBatman",
-        profileImageUrl: "",
         createdAt: new Date()
     });
 
@@ -35,14 +30,14 @@ export default function Prompt({ params }: { params: { id: string }}) {
             }
         }).catch((err) => console.error(err));
         ArtRepo.getArtworksByPrompt(promptId).then((artworks) => setArtworks(artworks)).catch((err) => console.error(err));
-    }, []);
+    }, [promptId]);
 
     return (
         <main className="mx-36">
             <h1 className="text-3xl pt-8 text-indigo-500 font-bold">{prompt.current.text}</h1>
             <div className="mt-2 flex items-center space-x-2">
-                <Image src={promptAuthor.current.profileImageUrl} width={40} height={40} className="rounded-ful" alt={""} />
-                <span className="text-gray-500">{promptAuthor.current.username}</span>
+                <Image src={prompt.current.creatorIconUrl} width={40} height={40} className="rounded-ful" alt={""} />
+                <span className="text-gray-500">{prompt.current.creatorName}</span>
             </div>
             <h2 className="text-xl text-indigo-500 font-semibold mt-4">Responses:</h2>
             <div className="grid grid-cols-5 mx-2">
