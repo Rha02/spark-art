@@ -13,15 +13,7 @@ export default function Prompt({ params }: { params: { id: string }}) {
     }
 
     const [artworks, setArtworks] = useState<Artwork[]>([]);
-    const prompt = useRef<Prompt>({
-        id: 0,
-        text: "",
-        creatorId: 0,
-        creatorName: "",
-        creatorIconUrl: "",
-        responses: 0,
-        createdAt: new Date()
-    });
+    const prompt = useRef<Prompt>(PromptRepo.newPrompt());
 
     useEffect(() => {
         PromptRepo.getPromptByID(promptId).then((p) => {
