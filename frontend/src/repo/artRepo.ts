@@ -1,6 +1,7 @@
 import { Artwork } from "@/lib/types";
 
 type ArtRepo = {
+    getArtworksByPrompt: (promptId: number) => Promise<Artwork[]>;
     getLatestArtworks: () => Promise<Artwork[]>;
     getMostLikedArtworks: () => Promise<Artwork[]>;
 }
@@ -54,6 +55,10 @@ const NewArtRepo = (host: string): ArtRepo => {
         createdAt: new Date()
     }];
 
+    const getArtworksByPrompt = async (promptId: number): Promise<Artwork[]> => {
+        return sampleData.filter(a => a.promptId === promptId);
+    };
+
     const getLatestArtworks = async (): Promise<Artwork[]> => {
         return sampleData.sort((a, b) => b.id - a.id);
     };
@@ -63,6 +68,7 @@ const NewArtRepo = (host: string): ArtRepo => {
     };
 
     return {
+        getArtworksByPrompt,
         getLatestArtworks,
         getMostLikedArtworks
     };
