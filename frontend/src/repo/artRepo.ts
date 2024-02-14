@@ -21,6 +21,7 @@ const NewArtRepo = (host: string): ArtRepo => {
         promptText: 'Prompt 1',
         imageUrl: '',
         likes: 100,
+        comments: 12,
         createdAt: new Date()
     }, {
         id: 2,
@@ -32,6 +33,7 @@ const NewArtRepo = (host: string): ArtRepo => {
         promptText: 'Prompt 2',
         imageUrl: '',
         likes: 50,
+        comments: 10,
         createdAt: new Date()
     }, {
         id: 3,
@@ -43,6 +45,7 @@ const NewArtRepo = (host: string): ArtRepo => {
         promptText: 'Prompt 3',
         imageUrl: '',
         likes: 30,
+        comments: 10,
         createdAt: new Date()
     }, {
         id: 4,
@@ -54,6 +57,7 @@ const NewArtRepo = (host: string): ArtRepo => {
         promptText: 'Prompt 4',
         imageUrl: '',
         likes: 20,
+        comments: 5,
         createdAt: new Date()
     }];
 
@@ -68,6 +72,7 @@ const NewArtRepo = (host: string): ArtRepo => {
             promptText: '',
             imageUrl: '',
             likes: 0,
+            comments: 0,
             createdAt: new Date()
         };
     };

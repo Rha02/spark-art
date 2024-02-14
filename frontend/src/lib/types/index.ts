@@ -8,6 +8,7 @@ export type Artwork = {
     promptText: string;
     imageUrl: string;
     likes: number;
+    comments: number;
     createdAt: Date;
 }
 
