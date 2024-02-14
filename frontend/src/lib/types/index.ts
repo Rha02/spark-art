@@ -3,10 +3,12 @@ export type Artwork = {
     title: string;
     authorId: number;
     authorName: string;
+    authorIconUrl: string;
     promptId: number;
     promptText: string;
     imageUrl: string;
     likes: number;
+    createdAt: Date;
 }
 
 export type User = {
