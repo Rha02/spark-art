@@ -28,3 +28,13 @@ export type Prompt = {
     responses: number;
     createdAt: Date;
 }
+
+export type ArtComment = {
+    id: number;
+    creatorId: number;
+    creatorName: string;
+    creatorIconUrl: string;
+    artworkId: number;
+    text: string;
+    createdAt: Date;
+}
