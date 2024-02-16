@@ -22,7 +22,8 @@ const NewArtRepo = (host: string): ArtRepo => {
         imageUrl: '',
         likes: 100,
         comments: 12,
-        createdAt: new Date()
+        isLiked: false,
+        createdAt: new Date(),
     }, {
         id: 2,
         title: 'Artwork 2',
@@ -34,6 +35,7 @@ const NewArtRepo = (host: string): ArtRepo => {
         imageUrl: '',
         likes: 50,
         comments: 10,
+        isLiked: false,
         createdAt: new Date()
     }, {
         id: 3,
@@ -46,6 +48,7 @@ const NewArtRepo = (host: string): ArtRepo => {
         imageUrl: '',
         likes: 30,
         comments: 10,
+        isLiked: false,
         createdAt: new Date()
     }, {
         id: 4,
@@ -58,6 +61,7 @@ const NewArtRepo = (host: string): ArtRepo => {
         imageUrl: '',
         likes: 20,
         comments: 5,
+        isLiked: false,
         createdAt: new Date()
     }];
 
@@ -73,6 +77,7 @@ const NewArtRepo = (host: string): ArtRepo => {
             imageUrl: '',
             likes: 0,
             comments: 0,
+            isLiked: false,
             createdAt: new Date()
         };
     };

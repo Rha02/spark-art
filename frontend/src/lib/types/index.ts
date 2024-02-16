@@ -9,6 +9,7 @@ export type Artwork = {
     imageUrl: string;
     likes: number;
     comments: number;
+    isLiked: boolean;
     createdAt: Date;
 }
 

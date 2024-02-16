@@ -1,6 +1,6 @@
 "use client";
 import { ArtComment, Artwork } from "@/lib/types";
-import { ArtRepo } from "@/repo";
+import { ArtRepo, CommentRepo } from "@/repo";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -19,10 +19,18 @@ export default function Prompt({ params }: { params: { id: string, artid: string
                 setArtwork(a);
             }
         }).catch((err) => console.error(err));
+        CommentRepo.getArtCommentsByArtwork(artID).then((c) => {
+            setComments(c);
+        }).catch((err) => console.error(err));
     }, [artID]);
 
     const handleLike = () => {
         console.log("TODO: handle like button");
+    };
+
+    const handleWriteComment = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log("TODO: handle writing a comment");
     };
 
     return (
@@ -49,26 +57,29 @@ export default function Prompt({ params }: { params: { id: string, artid: string
                 <Image src={artwork.imageUrl} width={500} height={500} className="bg-green-200" alt={""} />
             </div>
             <div className="flex justify-center space-x-4 items-center mt-2">
-                <button onClick={handleLike} className="border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white p-1 rounded-md">{artwork.likes} Likes</button>
+                <button onClick={handleLike} className={"p-1 rounded-md " + (artwork.isLiked ? "bg-blue-500 text-white" : "border-2 border-blue-500 text-blue-500")}>
+                    {artwork.likes} Likes
+                </button>
                 <span className="py-1">{artwork.comments} Comments</span>
             </div>
             <h2 className="text-2xl font-bold text-indigo-500 mt-4 text-center">Comments</h2>
             <div className="flex justify-center mt-2">
+                <form className="w-2/3 space-y-1" onSubmit={handleWriteComment}>
+                    <textarea placeholder="Write a comment..." className="w-full h-20 p-2 bg-gray-100 rounded shadow"></textarea>
+                    <button type="submit" className="px-3 bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Send</button>
+                </form>
+            </div>
+            <div className="flex justify-center mt-2">
                 <ul className="w-2/3 space-y-4">
-                    <li className="bg-gray-100 py-2 px-3 rounded shadow">
-                        <div className="flex items-center space-x-2">
-                            <Image src={artwork.authorIconUrl} width={40} height={40} className="rounded-full bg-green-200" alt={""} />
-                            <span className="text-blue-600 hover:text-blue-700">{artwork.authorName}</span>
-                        </div>
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laudantium officiis obcaecati iusto ducimus fugiat numquam natus, corporis molestiae accusantium tempore distinctio, mollitia exercitationem unde blanditiis aliquid voluptatum architecto impedit omnis?</p>
-                    </li>
-                    <li className="bg-gray-100 py-2 px-3 rounded shadow">
-                        <div className="flex items-center space-x-2">
-                            <Image src={artwork.authorIconUrl} width={40} height={40} className="rounded-full bg-green-200" alt={""} />
-                            <span className="text-blue-600 hover:text-blue-700">{artwork.authorName}</span>
-                        </div>
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laudantium officiis obcaecati iusto ducimus fugiat numquam natus, corporis molestiae accusantium tempore distinctio, mollitia exercitationem unde blanditiis aliquid voluptatum architecto impedit omnis?</p>
-                    </li>
+                    {comments.map((c, idx) => (
+                        <li key={idx} className="bg-gray-100 py-2 px-3 rounded shadow">
+                            <a href={"/users/" + c.creatorId} className="flex items-center space-x-2">
+                                <Image src={c.creatorIconUrl} width={40} height={40} className="rounded-full bg-green-200" alt={""} />
+                                <span className="text-blue-600 hover:text-blue-700">{c.creatorName}</span>
+                            </a>
+                            <p>{c.text}</p>
+                        </li>
+                    ))}
                 </ul>
             </div>
         </main>
