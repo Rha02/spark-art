@@ -1,4 +1,5 @@
 "use client";
+import { CommentIcon, ThumbsUpIcon } from "@/lib/icons";
 import { ArtComment, Artwork } from "@/lib/types";
 import { ArtRepo, CommentRepo } from "@/repo";
 import Image from "next/image";
@@ -57,10 +58,16 @@ export default function Prompt({ params }: { params: { id: string, artid: string
                 <Image src={artwork.imageUrl} width={500} height={500} className="bg-green-200" alt={""} />
             </div>
             <div className="flex justify-center space-x-4 items-center mt-2">
-                <button onClick={handleLike} className={"p-1 rounded-md " + (artwork.isLiked ? "bg-blue-500 text-white" : "border-2 border-blue-500 text-blue-500")}>
-                    {artwork.likes} Likes
+                <button onClick={handleLike} className={"p-1 rounded-md flex space-x-1 item-center " + (artwork.isLiked ? "bg-blue-500 text-white" : "border-2 border-blue-500 text-blue-500")}>
+                    <span>
+                        {artwork.likes}
+                    </span>
+                    <ThumbsUpIcon width={20} height={20} color={artwork.isLiked ? "#ffffff" : "#3b82f6"} />
                 </button>
-                <span className="py-1">{artwork.comments} Comments</span>
+                <span className="py-1 flex text-gray-600 space-x-1 items-center">
+                    <span>{artwork.comments}</span>
+                    <CommentIcon width={20} height={20} color="#4b5563" />
+                </span>
             </div>
             <h2 className="text-2xl font-bold text-indigo-500 mt-4 text-center">Comments</h2>
             <div className="flex justify-center mt-2">
