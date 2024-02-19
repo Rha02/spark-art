@@ -1,4 +1,5 @@
 import { ArtRepo, PromptRepo, UserRepo } from "@/repo";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
@@ -9,10 +10,22 @@ export default async function Users({ params }: { params: { id: string } }) {
         redirect("/dashboard");
     }
 
-    const [artworks, prompts] = await Promise.all([
+    // Get cookie store
+    const cookieStore = cookies();
+
+    // Get authtoken from cookies
+    const authtoken = cookieStore.get("authtoken")?.value;
+
+    // Check if user is authenticated
+    const isAuthenticated = authtoken !== undefined;
+
+    const [artworks, prompts, authUser] = await Promise.all([
         ArtRepo.getArtworksByUser(userID),
-        PromptRepo.getPromptsByUser(userID)
+        PromptRepo.getPromptsByUser(userID),
+        isAuthenticated ? UserRepo.getAuthUser(authtoken) : null
     ]);
+
+    console.log(authUser?.id + " - " + userID);
 
     return (
         <main className="mx-36">

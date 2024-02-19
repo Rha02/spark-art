@@ -23,12 +23,7 @@ const NewUserRepo = (host: string): userRepo => {
 
     const getAuthUser = async (token: string): Promise<User> => {
         // TODO: execute the fetch request to the backend
-        return {
-            id: 1,
-            username: "TestUser",
-            profileImageUrl: "",
-            createdAt: new Date()
-        };
+        return sampleData[0];
     };
     
     const getUserByID = async (id: number): Promise<User | undefined> => {
