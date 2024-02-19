@@ -6,6 +6,7 @@ type getPromptsFilter = {
 };
 
 type PromptRepo = {
+    newPrompt: () => Prompt;
     getPromptByID: (id: number) => Promise<Prompt | undefined>;
     getPrompts: (filter?: getPromptsFilter) => Promise<Prompt[]>;
     createPrompt: (text: string) => Promise<Prompt>;
@@ -44,6 +45,18 @@ const NewPromptRepo = (host: string): PromptRepo => {
         }
     ];
 
+    const newPrompt = (): Prompt => {
+        return {
+            id: 0,
+            text: '',
+            creatorId: 0,
+            creatorName: '',
+            creatorIconUrl: '',
+            responses: 0,
+            createdAt: new Date()
+        };
+    };
+
     const getPromptByID = async (id: number): Promise<Prompt | undefined> => {
         return sampleData.find(p => p.id === id);
     };
@@ -68,6 +81,7 @@ const NewPromptRepo = (host: string): PromptRepo => {
     };
 
     return {
+        newPrompt,
         getPromptByID,
         getPrompts,
         createPrompt

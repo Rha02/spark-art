@@ -1,9 +1,12 @@
 import { Artwork } from "@/lib/types";
 
 type ArtRepo = {
+    newArtwork: () => Artwork;
+    getArtworkByID: (id: number) => Promise<Artwork | undefined>;
     getArtworksByPrompt: (promptId: number) => Promise<Artwork[]>;
     getLatestArtworks: () => Promise<Artwork[]>;
     getMostLikedArtworks: () => Promise<Artwork[]>;
+    updateIsLiked: (id: number, isLiked: boolean) => Promise<Artwork | undefined>;
 }
 
 const NewArtRepo = (host: string): ArtRepo => {
@@ -19,7 +22,9 @@ const NewArtRepo = (host: string): ArtRepo => {
         promptText: 'Prompt 1',
         imageUrl: '',
         likes: 100,
-        createdAt: new Date()
+        comments: 12,
+        isLiked: false,
+        createdAt: new Date(),
     }, {
         id: 2,
         title: 'Artwork 2',
@@ -30,6 +35,8 @@ const NewArtRepo = (host: string): ArtRepo => {
         promptText: 'Prompt 2',
         imageUrl: '',
         likes: 50,
+        comments: 10,
+        isLiked: false,
         createdAt: new Date()
     }, {
         id: 3,
@@ -41,6 +48,8 @@ const NewArtRepo = (host: string): ArtRepo => {
         promptText: 'Prompt 3',
         imageUrl: '',
         likes: 30,
+        comments: 10,
+        isLiked: false,
         createdAt: new Date()
     }, {
         id: 4,
@@ -52,8 +61,31 @@ const NewArtRepo = (host: string): ArtRepo => {
         promptText: 'Prompt 4',
         imageUrl: '',
         likes: 20,
+        comments: 5,
+        isLiked: false,
         createdAt: new Date()
     }];
+
+    const newArtwork = (): Artwork => {
+        return {
+            id: 0,
+            title: '',
+            authorId: 0,
+            authorName: '',
+            authorIconUrl: '',
+            promptId: 0,
+            promptText: '',
+            imageUrl: '',
+            likes: 0,
+            comments: 0,
+            isLiked: false,
+            createdAt: new Date()
+        };
+    };
+
+    const getArtworkByID = async (id: number): Promise<Artwork | undefined> => {
+        return sampleData.find(a => a.id === id);
+    };
 
     const getArtworksByPrompt = async (promptId: number): Promise<Artwork[]> => {
         return sampleData.filter(a => a.promptId === promptId);
@@ -67,10 +99,24 @@ const NewArtRepo = (host: string): ArtRepo => {
         return sampleData.sort((a, b) => b.likes - a.likes);
     };
 
+    const updateIsLiked = async (id: number, isLiked: boolean): Promise<Artwork | undefined> => {
+        const artwork = sampleData.find(a => a.id === id);
+        if (artwork) {
+            return {
+                ...artwork,
+                isLiked: isLiked,
+                likes: isLiked ? artwork?.likes + 1 : artwork?.likes - 1
+            };
+        }
+    };
+
     return {
+        newArtwork,
+        getArtworkByID,
         getArtworksByPrompt,
         getLatestArtworks,
-        getMostLikedArtworks
+        getMostLikedArtworks,
+        updateIsLiked
     };
 };
 
