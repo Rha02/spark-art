@@ -6,6 +6,7 @@ type ArtRepo = {
     getArtworksByPrompt: (promptId: number) => Promise<Artwork[]>;
     getLatestArtworks: () => Promise<Artwork[]>;
     getMostLikedArtworks: () => Promise<Artwork[]>;
+    updateIsLiked: (id: number, isLiked: boolean) => Promise<Artwork | undefined>;
 }
 
 const NewArtRepo = (host: string): ArtRepo => {
@@ -98,12 +99,24 @@ const NewArtRepo = (host: string): ArtRepo => {
         return sampleData.sort((a, b) => b.likes - a.likes);
     };
 
+    const updateIsLiked = async (id: number, isLiked: boolean): Promise<Artwork | undefined> => {
+        const artwork = sampleData.find(a => a.id === id);
+        if (artwork) {
+            return {
+                ...artwork,
+                isLiked: isLiked,
+                likes: isLiked ? artwork?.likes + 1 : artwork?.likes - 1
+            };
+        }
+    };
+
     return {
         newArtwork,
         getArtworkByID,
         getArtworksByPrompt,
         getLatestArtworks,
-        getMostLikedArtworks
+        getMostLikedArtworks,
+        updateIsLiked
     };
 };
 

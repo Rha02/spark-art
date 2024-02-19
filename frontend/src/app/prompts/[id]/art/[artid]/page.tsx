@@ -26,12 +26,33 @@ export default function Prompt({ params }: { params: { id: string, artid: string
     }, [artID]);
 
     const handleLike = () => {
-        console.log("TODO: handle like button");
+        ArtRepo.updateIsLiked(artID, !artwork.isLiked).then((a) => {
+            if (a) {
+                setArtwork(a);
+            }
+        }).catch((err) => console.error(err));
     };
 
     const handleWriteComment = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("TODO: handle writing a comment");
+
+        const form = e.currentTarget as HTMLFormElement;
+        const textarea = form.querySelector("textarea") as HTMLTextAreaElement;
+        const text = textarea.value.trim();
+        if (text.length === 0) {
+            return;
+        }
+
+        // disalbe submit button
+        const submitButton = form.querySelector("button[type=submit]") as HTMLButtonElement;
+        submitButton.disabled = true;
+
+        CommentRepo.createArtComment(artID, text).then((c) => {
+            setComments([...comments, c]);
+            textarea.value = "";
+        }).catch((err) => console.error(err)).finally(() => {
+            submitButton.disabled = false;
+        });
     };
 
     return (

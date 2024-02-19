@@ -3,6 +3,7 @@ import { ArtComment } from "@/lib/types";
 type ArtCommentRepo = {
     newArtComment: () => ArtComment;
     getArtCommentsByArtwork: (artworkId: number) => Promise<ArtComment[]>;
+    createArtComment: (artworkId: number, text: string) => Promise<ArtComment>;
 }
 
 const NewCommentRepo = (host: string): ArtCommentRepo => {
@@ -58,9 +59,22 @@ const NewCommentRepo = (host: string): ArtCommentRepo => {
         return sampleData.filter((ac) => ac.artworkId === artworkId);
     };
 
+    const createArtComment = async (artworkId: number, text: string) => {
+        return {
+            id: 5,
+            creatorId: 5,
+            creatorName: 'User 5',
+            creatorIconUrl: '',
+            artworkId: artworkId,
+            text: text,
+            createdAt: new Date()
+        };
+    };
+
     return {
         newArtComment,
-        getArtCommentsByArtwork
+        getArtCommentsByArtwork,
+        createArtComment
     };
 };
 
