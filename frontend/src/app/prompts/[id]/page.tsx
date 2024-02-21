@@ -1,6 +1,6 @@
 "use client";
 
-import ArtCard from "@/lib/components/client/artCard";
+import { ArtCard } from "@/lib/components/client";
 import { Artwork, Prompt } from "@/lib/types";
 import { ArtRepo, PromptRepo } from "@/repo";
 import Image from "next/image";

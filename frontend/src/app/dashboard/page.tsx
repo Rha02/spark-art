@@ -1,5 +1,5 @@
 "use client";
-import ArtCard from '@/lib/components/client/artCard';
+import { ArtCard } from '@/lib/components/client';
 import { Artwork } from '@/lib/types';
 import { ArtRepo } from '@/repo';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ export default function Dashboard() {
 
     const onSortTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSortType(e.target.value);
-        
+
         if (e.target.value === 'latest') {
             ArtRepo.getLatestArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
         } else if (e.target.value === 'most-liked') {
@@ -40,7 +40,7 @@ export default function Dashboard() {
             </div>
             <div className="flex justify-center mt-2">
                 <div className="grid grid-cols-5 w-3/4 mx-2 space-x-4 mt-8 space-y-4">
-                    {artworks.map(artwork => <ArtCard key={artwork.id} artwork={artwork} />) }
+                    {artworks.map(artwork => <ArtCard key={artwork.id} artwork={artwork} />)}
                 </div>
             </div>
         </main>

@@ -1,3 +1,4 @@
-import artCard from "./artCard";
+import ArtCard from "./artCard";
+import PromptCard from "./promptCard";
 
-export { artCard };
+export { ArtCard, PromptCard };
