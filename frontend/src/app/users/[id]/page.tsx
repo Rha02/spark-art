@@ -32,7 +32,14 @@ export default async function Users({ params }: { params: { id: string } }) {
                 <Image src={user.profileImageUrl} width={150} height={150} className="rounded-full bg-green-100" alt={""} />
                 <h1 className="text-indigo-500 text-3xl font-bold">{user.username}</h1>
             </div>
-            <button className="py-1 px-2 text-white bg-blue-500 ml-5 mt-1 rounded hover:bg-blue-600 transition ease-in-out duration-150">Change Icon</button>
+            <form className="ml-5 mt-1 space-y-1" action="/api/profile-icon" method="POST" encType="multipart/form-data">
+                <div>
+                    <input type="file" name="profile-picture" id="profile-picture" className="border-b-2 border-indigo-500 w-64 text-center bg-gray-100 rounded" />
+                </div>
+                <button type="submit" className="py-1 px-2 text-white bg-blue-500 rounded hover:bg-blue-600 transition ease-in-out duration-150">
+                    Update Icon
+                </button>
+            </form>
             <h2 className="text-2xl text-indigo-500 font-semibold mt-4 border-t-2 border-indigo-200">Artworks</h2>
             <div className="flex justify-center">
                 <div className="grid grid-cols-5">

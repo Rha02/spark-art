@@ -4,6 +4,7 @@ type userRepo = {
     register: (formData: FormData) => Promise<string>;
     getAuthUser: (token: string) => Promise<User>;
     getUserByID: (id: number) => Promise<User | undefined>;
+    updateProfileIcon: (id: number, file: File) => Promise<string>;
 }
 
 const NewUserRepo = (host: string): userRepo => {
@@ -30,10 +31,17 @@ const NewUserRepo = (host: string): userRepo => {
         return sampleData.find((u) => u.id === id);
     };
 
+    const updateProfileIcon = async (id: number, file: File): Promise<string> => {
+        console.log('updateProfileIcon: ', id, file);
+        // TODO: execute request to backend, then respond with new profile image url
+        return "";
+    };
+
     return {
         register,
         getAuthUser,
-        getUserByID
+        getUserByID,
+        updateProfileIcon
     };
 };
 
