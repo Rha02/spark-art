@@ -12,7 +12,12 @@ const NewUserRepo = (host: string): userRepo => {
 
     const sampleData: User[] = [{
         id: 1,
-        username: "TestUser",
+        username: "TheBatman",
+        profileImageUrl: "",
+        createdAt: new Date()
+    }, {
+        id: 2,
+        username: "TestUser2",
         profileImageUrl: "",
         createdAt: new Date()
     }];
