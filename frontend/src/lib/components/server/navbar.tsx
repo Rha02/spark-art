@@ -1,3 +1,5 @@
+"use server";
+
 import { UserRepo } from "@/repo";
 import { cookies } from "next/headers";
 import Image from "next/image";

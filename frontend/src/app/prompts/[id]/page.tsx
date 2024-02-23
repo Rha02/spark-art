@@ -1,12 +1,12 @@
 "use client";
 
-import ArtCard from "@/lib/components/client/artCard";
+import { ArtCard } from "@/lib/components/client";
 import { Artwork, Prompt } from "@/lib/types";
 import { ArtRepo, PromptRepo } from "@/repo";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-export default function Prompt({ params }: { params: { id: string }}) {
+export default function Prompt({ params }: { params: { id: string } }) {
     const promptId = parseInt(params.id);
     if (isNaN(promptId)) {
         window.location.href = "/prompts";
