@@ -1,3 +1,7 @@
 package config
 
-type AppConfig struct{}
+import "github.com/rha02/spark-art/backend/src/dbrepo"
+
+type AppConfig struct {
+	DB dbrepo.DatabaseReposisotry
+}

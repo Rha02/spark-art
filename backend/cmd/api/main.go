@@ -6,6 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/rha02/spark-art/backend/src/config"
+	"github.com/rha02/spark-art/backend/src/dbrepo"
 	"github.com/rha02/spark-art/backend/src/http/handlers"
 	"github.com/rha02/spark-art/backend/src/http/router"
 )
@@ -14,7 +15,9 @@ func main() {
 	godotenv.Load()
 
 	// Create app-wide config
-	appConfig := &config.AppConfig{}
+	appConfig := &config.AppConfig{
+		DB: dbrepo.NewTestDBRepo(),
+	}
 
 	// Instantiate HTTP repository and handlers
 	handlersRepo := handlers.NewRepository(appConfig)
