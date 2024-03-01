@@ -28,3 +28,13 @@ func (m *testDBRepo) CreateUser(user *models.User) error {
 	}
 	return nil
 }
+
+// GetUserByEmail returns a user by email
+func (m *testDBRepo) GetUserByEmail(email string) (*models.User, error) {
+	if email == "user@spark.art" {
+		return &models.User{
+			Email: "user@spark.art",
+		}, nil
+	}
+	return nil, errors.New("user not found")
+}
