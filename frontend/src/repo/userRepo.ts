@@ -1,4 +1,4 @@
-import { UserRepository } from "@/repo";
+import { UserRepository } from "./repository";
 
 const NewUserRepository = (host: string): UserRepository => {
     console.log("UserRepo host: " + host);
