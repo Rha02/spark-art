@@ -10,12 +10,10 @@ export type UserRepository = {
 export type ArtRepository = {
     createArtwork: (artwork: Artwork) => Promise<Artwork>
     getArtworks: () => Promise<Artwork[]>
-    getArtworkById: (id: number) => Promise<Artwork>
+    getArtworkById: (id: number) => Promise<Artwork | undefined>
     getArtworksByPrompt: (promptId: number) => Promise<Artwork[]>
     getArtworksByUser: (userId: number) => Promise<Artwork[]>
-    likeArtwork: (userId: number, artworkId: number) => Promise<void>
-    unlikeArtwork: (userId: number, artworkId: number) => Promise<void>
-    commentOnArtwork: (userId: number, artworkId: number, text: string) => Promise<void>
-    deleteComment: (commentId: number) => Promise<void>
+    likeArtwork: (artworkId: number) => Promise<void>
+    dislikeArtwork: (artworkId: number) => Promise<void>
 }
 
