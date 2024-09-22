@@ -14,7 +14,7 @@ const NewUserRepository = (host: string): UserRepository => {
             return {
                 id: 1,
                 username: "test",
-                profileImageUrl: "fakeurl",
+                profileImageUrl: "",
                 createdAt: new Date()
             }
         },
@@ -24,7 +24,7 @@ const NewUserRepository = (host: string): UserRepository => {
             return {
                 id: id,
                 username: "test",
-                profileImageUrl: "fakeurl",
+                profileImageUrl: "",
                 createdAt: new Date()
             }
         },
@@ -32,7 +32,7 @@ const NewUserRepository = (host: string): UserRepository => {
             console.log("Updating profile icon for user: " + id);
             console.log("File: " + file.name);
             // TODO: Implement profile icon update
-            return "fakeurl";
+            return "";
         }
     }
 }
