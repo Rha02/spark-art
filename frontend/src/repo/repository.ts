@@ -1,4 +1,9 @@
-import { Artwork, User } from "@/lib/models"
+import { Artwork, Prompt, User } from "@/lib/models"
+
+type getPromptsFilter = {
+    sortType?: string;
+    search?: string;
+};
 
 export type UserRepository = {
     createUser: (user: User) => Promise<User>
@@ -15,5 +20,12 @@ export type ArtRepository = {
     getArtworksByUser: (userId: number) => Promise<Artwork[]>
     likeArtwork: (artworkId: number) => Promise<void>
     dislikeArtwork: (artworkId: number) => Promise<void>
+}
+
+export type PromptRepository = {
+    getPromptByID: (id: number) => Promise<Prompt | undefined>;
+    getPrompts: (filter?: getPromptsFilter) => Promise<Prompt[]>;
+    getPromptsByUser: (userId: number) => Promise<Prompt[]>;
+    createPrompt: (text: string) => Promise<Prompt>;
 }
 
