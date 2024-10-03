@@ -1,5 +1,5 @@
 
-from .services.hashrepo.repository import HashFuncRepository
+from services.hashrepo.repository import HashFuncRepository
 
 class _AppConfig:
     """App-wide configuration"""

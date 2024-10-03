@@ -1,7 +1,9 @@
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Form
 
-from backend.config import get_app_config
+from config import get_app_config
+from models.models import User
+from utils import http as httpUtils
 
 UserRouter = APIRouter()
 
@@ -13,11 +15,34 @@ async def get_users():
 
 @UserRouter.post("/register")
 async def register_user(
-    username: str,
-    password: str
+    username: str = Form(),
+    password: str = Form()
 ):
-    print(appConfig.hashrepo.hash(password))
-    return {"message": "Register user"}
+    try:
+        hashed_password = appConfig.hashrepo.hash(password)
+    except Exception as e:
+        return httpUtils.jsonResponse({
+            "error": str(e)
+        }, 500)
+    
+    newUser = User(
+        id=0,
+        username=username,
+        password=hashed_password,
+        profileImageUrl="",
+        createdAt=""
+    )
+
+    # TODO: save user to database
+
+    auth_token = "dummy_token"
+
+    res = httpUtils.jsonResponse({
+        "message": "User registered"
+    }, 201)
+    res.headers["Authorization"] = f"Bearer {auth_token}"
+    
+    return res
 
 @UserRouter.post("/login")
 async def login_user():
