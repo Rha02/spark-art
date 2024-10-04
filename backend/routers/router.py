@@ -1,8 +1,7 @@
 
 from fastapi import APIRouter
 
-from backend.routers.userRouter import UserRouter
-
+from routers.userRouter import UserRouter
 
 AppRouter = APIRouter()
 
