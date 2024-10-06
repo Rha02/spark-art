@@ -34,6 +34,7 @@ async def register_user(
     )
 
     # TODO: save user to database
+    print(newUser)
 
     auth_token = "dummy_token"
 
