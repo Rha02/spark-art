@@ -36,7 +36,9 @@ async def register_user(
     # TODO: save user to database
     print(newUser)
 
-    auth_token = "dummy_token"
+    auth_token = appConfig.authrepo.create_token({
+        "username": newUser.username,
+    })
 
     res = httpUtils.jsonResponse({
         "message": "User registered"
