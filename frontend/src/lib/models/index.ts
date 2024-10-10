@@ -12,8 +12,8 @@ export type Artwork = {
     authorId: number;
     authorName: string;
     authorIconUrl: string;
-    promptId: number;
-    promptText: string;
+    topicId: number;
+    topicText: string;
     imageUrl: string;
     likes: number;
     comments: number;
@@ -21,7 +21,7 @@ export type Artwork = {
     createdAt: Date;
 }
 
-export type Prompt = {
+export type Topic = {
     id: number
     text: string
     creatorId: number;

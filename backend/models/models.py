@@ -15,11 +15,11 @@ class Artwork(BaseModel):
     title: str
     authorId: int;
     authorIconUrl: str;
-    promptId: int;
+    topicId: int;
     imageUrl: str;
     createdAt: str;
 
-class Prompt(BaseModel):
+class Topic(BaseModel):
     id: int
     text: str
     creatorId: int;

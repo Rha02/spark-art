@@ -26,7 +26,7 @@ export default function ArtCard(props: ArtCardProps) {
     return (
         <div className="items-center flex flex-col justify-center shadow">
             <div className="flex flex-col items-center py-4">
-                <a href={"/prompts/" + artwork.promptId + "/art/" + artwork.id} className="mb-2">
+                <a href={"/topics/" + artwork.topicId + "/art/" + artwork.id} className="mb-2">
                     <Image src={artwork.imageUrl} alt="" width={0} height={0} className="h-48 w-48 hover:scale-105 transition duration-150" />
                 </a>
                 <h3 className="text-xl py-1 w-full text-center">{artwork.title}</h3>
@@ -36,9 +36,9 @@ export default function ArtCard(props: ArtCardProps) {
                             {artwork.authorName}
                         </a>
                     </p>
-                    <p>For prompt:
-                        <a href={"/prompts/" + artwork.promptId} className="ml-1 text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">
-                            {artwork.promptText}
+                    <p>For topic:
+                        <a href={"/topics/" + artwork.topicId} className="ml-1 text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">
+                            {artwork.topicText}
                         </a>
                     </p>
                 </div>

@@ -43,7 +43,7 @@ export default async function Navbar() {
             </h1>
             <ul className="flex space-x-2">
                 <Navlink link="/dashboard" name="Dashboard" />
-                <Navlink link="/prompts" name="Prompts" />
+                <Navlink link="/topics" name="Topics" />
                 {isAuthenticated && <Navlink link="/users/1" name="Profile" />}
                 {isAuthenticated && <Navlink link="/api/logout" name="Logout" />}
                 {isAuthenticated &&
