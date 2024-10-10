@@ -1,10 +1,10 @@
-import { Prompt } from "@/lib/models";
-import { PromptRepository } from "./repository";
+import { Topic } from "@/lib/models";
+import { TopicRepository } from "./repository";
 
-const NewPromptRepository = (host: string): PromptRepository => {
-    console.log("PromptRepo host: " + host);
+const NewTopicRepository = (host: string): TopicRepository => {
+    console.log("TopicRepo host: " + host);
 
-    const sampleData: Prompt[] = [
+    const sampleData: Topic[] = [
         {
             id: 1,
             text: 'Apple tree on a hill',
@@ -35,18 +35,18 @@ const NewPromptRepository = (host: string): PromptRepository => {
     ];
 
     return {
-        getPrompts: async (filter) => {
+        getTopics: async (filter) => {
             console.log(filter);
             return [...sampleData];
         },
-        getPromptByID: async (id) => {
+        getTopicByID: async (id) => {
             return sampleData.find(p => p.id === id);
         },
-        getPromptsByUser: async (userId) => {
+        getTopicsByUser: async (userId) => {
             return sampleData.filter(p => p.creatorId === userId);
         },
-        createPrompt: async (text) => {
-            const newPrompt: Prompt = {
+        createTopic: async (text) => {
+            const newTopic: Topic = {
                 id: sampleData.length + 1,
                 text: text,
                 creatorId: 1,
@@ -56,11 +56,11 @@ const NewPromptRepository = (host: string): PromptRepository => {
                 createdAt: new Date()
             };
 
-            sampleData.push(newPrompt);
+            sampleData.push(newTopic);
 
-            return newPrompt;
+            return newTopic;
         }
     }
 }
 
-export default NewPromptRepository;
+export default NewTopicRepository;

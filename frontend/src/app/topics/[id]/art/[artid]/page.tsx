@@ -5,10 +5,10 @@ import { ArtRepo, CommentRepo } from "@/repo";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-export default function Prompt({ params }: { params: { id: string, artid: string } }) {
+export default function Topic({ params }: { params: { id: string, artid: string } }) {
     const artID = parseInt(params.id);
     if (isNaN(artID)) {
-        window.location.href = "/prompts";
+        window.location.href = "/topics";
     }
 
     const [artwork, setArtwork] = useState<Artwork>({
@@ -17,8 +17,8 @@ export default function Prompt({ params }: { params: { id: string, artid: string
         authorId: 0,
         authorName: "",
         authorIconUrl: "",
-        promptId: 0,
-        promptText: "",
+        topicId: 0,
+        topicText: "",
         imageUrl: "",
         likes: 0,
         comments: 0,
@@ -87,8 +87,8 @@ export default function Prompt({ params }: { params: { id: string, artid: string
                 <span className="mr-2">
                     Drawn for:
                 </span>
-                <a href={"/prompts/" + artwork.promptId} className="text-blue-600 hover:text-blue-700">
-                    {artwork.promptText}
+                <a href={"/topics/" + artwork.topicId} className="text-blue-600 hover:text-blue-700">
+                    {artwork.topicText}
                 </a>
             </h3>
             <div className="flex justify-center mt-2">

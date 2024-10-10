@@ -10,8 +10,8 @@ const NewArtRepository = (host: string): ArtRepository => {
         authorId: 1,
         authorName: 'Author 1',
         authorIconUrl: '',
-        promptId: 1,
-        promptText: 'Prompt 1',
+        topicId: 1,
+        topicText: 'Topic 1',
         imageUrl: '',
         likes: 100,
         comments: 12,
@@ -23,8 +23,8 @@ const NewArtRepository = (host: string): ArtRepository => {
         authorId: 2,
         authorName: 'Author 2',
         authorIconUrl: '',
-        promptId: 2,
-        promptText: 'Prompt 2',
+        topicId: 2,
+        topicText: 'Topic 2',
         imageUrl: '',
         likes: 50,
         comments: 10,
@@ -36,8 +36,8 @@ const NewArtRepository = (host: string): ArtRepository => {
         authorId: 3,
         authorName: 'Author 3',
         authorIconUrl: '',
-        promptId: 3,
-        promptText: 'Prompt 3',
+        topicId: 3,
+        topicText: 'Topic 3',
         imageUrl: '',
         likes: 30,
         comments: 10,
@@ -49,8 +49,8 @@ const NewArtRepository = (host: string): ArtRepository => {
         authorId: 4,
         authorName: 'Author 4',
         authorIconUrl: '',
-        promptId: 4,
-        promptText: 'Prompt 4',
+        topicId: 4,
+        topicText: 'Topic 4',
         imageUrl: '',
         likes: 20,
         comments: 5,
@@ -66,8 +66,8 @@ const NewArtRepository = (host: string): ArtRepository => {
         getArtworkById: async (id) => {
             return sampleData.find(artwork => artwork.id === id);
         },
-        getArtworksByPrompt: async (promptId) => {
-            return sampleData.filter(artwork => artwork.promptId === promptId);
+        getArtworksByTopic: async (topicId) => {
+            return sampleData.filter(artwork => artwork.topicId === topicId);
         },
         getArtworksByUser: async (userId) => {
             return sampleData.filter(artwork => artwork.authorId === userId);

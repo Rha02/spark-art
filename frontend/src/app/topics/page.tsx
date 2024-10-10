@@ -1,43 +1,43 @@
 "use client";
 
 import { PlusIcon, SearchIcon } from "@/lib/icons";
-import { Prompt } from "@/lib/models";
-import { PromptRepo } from "@/repo";
+import { Topic } from "@/lib/models";
+import { TopicRepo } from "@/repo";
 import { useEffect, useState } from "react";
 
-export default function Prompts() {
-    const [prompts, setPrompts] = useState<Prompt[]>([]);
+export default function Topics() {
+    const [topics, setTopics] = useState<Topic[]>([]);
     const [search, setSearch] = useState("");
     const [sortType, setSortType] = useState('latest');
 
     useEffect(() => {
-        console.log("TODO: fetch prompts from the server");
-        PromptRepo.getPrompts().then(prompts => setPrompts(prompts)).catch(err => console.error(err));
+        console.log("TODO: fetch topics from the server");
+        TopicRepo.getTopics().then(topics => setTopics(topics)).catch(err => console.error(err));
     }, []);
 
     const onSortTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSortType(e.target.value);
 
-        console.log("TODO: update prompts based on sort type");
+        console.log("TODO: update topics based on sort type");
 
         if (e.target.value === 'latest') {
-            PromptRepo.getPrompts().then(prompts => setPrompts(prompts)).catch(err => console.error(err));
+            TopicRepo.getTopics().then(topics => setTopics(topics)).catch(err => console.error(err));
         } else if (e.target.value === 'most-responses') {
-            PromptRepo.getPrompts().then(prompts => setPrompts(prompts)).catch(err => console.error(err));
+            TopicRepo.getTopics().then(topics => setTopics(topics)).catch(err => console.error(err));
         }
     };
 
     const handleSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
-        console.log("TODO: search for prompts based on search input");
+        console.log("TODO: search for topics based on search input");
 
         console.log(e.timeStamp)
 
         if (!search) return;
 
-        PromptRepo.getPrompts({
+        TopicRepo.getTopics({
             search: search
-        }).then(prompts => {
-            setPrompts(prompts);
+        }).then(topics => {
+            setTopics(topics);
         }).catch(err => console.error(err));
     };
 
@@ -50,8 +50,8 @@ export default function Prompts() {
             return;
         }
 
-        PromptRepo.createPrompt(search).then(prompt => {
-            setPrompts([prompt, ...prompts]);
+        TopicRepo.createTopic(search).then(topic => {
+            setTopics([topic, ...topics]);
             setSearch("");
         }).catch(err => {
             console.error(err);
@@ -62,7 +62,7 @@ export default function Prompts() {
 
     return (
         <main>
-            <h1 className="text-center text-4xl pt-8 font-semibold text-indigo-500">Explore Prompts</h1>
+            <h1 className="text-center text-4xl pt-8 font-semibold text-indigo-500">Explore Topics</h1>
             <div className="flex w-full justify-center pt-4">
                 <div className="text-center border-b-2 w-3/4">
                     <div className="flex justify-center items-center">
@@ -95,17 +95,17 @@ export default function Prompts() {
             <div className="flex justify-center mt-2">
                 <div className="w-3/4">
                     <div className="flex justify-between border-b-2 border-indigo-500 p-2 mb-2 space-x-4">
-                        <div className="w-2/5 font-semibold text-gray-800">Prompt</div>
+                        <div className="w-2/5 font-semibold text-gray-800">Topic</div>
                         <div className="w-1/5 font-semibold text-gray-800">Creator</div>
                         <div className="w-1/5 font-semibold text-gray-800">Responses</div>
                         <div className="w-1/5 font-semibold text-gray-800">Created</div>
                     </div>
-                    {prompts.map((prompt, idx) => (
-                        <a key={idx} href={"/prompts/" + prompt.id} className="flex justify-between p-2 shadow bg-gray-50 mb-4 hover:bg-gray-100 transition ease-in-out duration-150 space-x-4">
-                            <span className="w-2/5">{prompt.text}</span>
+                    {topics.map((topic, idx) => (
+                        <a key={idx} href={"/topics/" + topic.id} className="flex justify-between p-2 shadow bg-gray-50 mb-4 hover:bg-gray-100 transition ease-in-out duration-150 space-x-4">
+                            <span className="w-2/5">{topic.text}</span>
                             <span className="w-1/5">User123</span>
-                            <span className="w-1/5">{prompt.responses}</span>
-                            <span className="w-1/5">{prompt.createdAt.toDateString()}</span>
+                            <span className="w-1/5">{topic.responses}</span>
+                            <span className="w-1/5">{topic.createdAt.toDateString()}</span>
                         </a>
                     ))}
                 </div>
