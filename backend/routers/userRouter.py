@@ -5,48 +5,51 @@ from config import get_app_config
 from models.models import User
 from utils import http as httpUtils
 
-UserRouter = APIRouter()
-
 appConfig = get_app_config()
 
-@UserRouter.get("/")
-async def get_users():
-    return {"message": "Get authenticated user"}
+def create_user_router(get_app_funcs: dict[str, dict[str, callable]]) -> APIRouter:
+    userRouter = APIRouter()
 
-@UserRouter.post("/register")
-async def register_user(
-    username: str = Form(),
-    password: str = Form()
-):
-    try:
-        hashed_password = appConfig.hashrepo.hash(password)
-    except Exception as e:
-        return httpUtils.jsonResponse({
-            "error": str(e)
-        }, 500)
-    
-    newUser = User(
-        id=0,
-        username=username,
-        password=hashed_password,
-        profileImageUrl="",
-        createdAt=""
-    )
+    @userRouter.get("/")
+    async def get_users():
+        return {"message": "Get authenticated user"}
 
-    # TODO: save user to database
-    print(newUser)
+    @userRouter.post("/register")
+    async def register_user(
+        username: str = Form(),
+        password: str = Form()
+    ):
+        try:
+            hashed_password = appConfig.hashrepo.hash(password)
+        except Exception as e:
+            return httpUtils.jsonResponse({
+                "error": str(e)
+            }, 500)
+        
+        newUser = User(
+            id=0,
+            username=username,
+            password=hashed_password,
+            profileImageUrl="",
+            createdAt=""
+        )
 
-    auth_token = appConfig.authrepo.create_token({
-        "username": newUser.username,
-    })
+        # TODO: save user to database
+        print(newUser)
 
-    res = httpUtils.jsonResponse({
-        "message": "User registered"
-    }, 201)
-    res.headers["Authorization"] = f"Bearer {auth_token}"
-    
-    return res
+        auth_token = get_app_funcs["authrepo"]()["create_token"]({
+            "username": newUser.username,
+        })
 
-@UserRouter.post("/login")
-async def login_user():
-    return {"message": "Login user"}
+        res = httpUtils.jsonResponse({
+            "message": "User registered"
+        }, 201)
+        res.headers["Authorization"] = f"Bearer {auth_token}"
+        
+        return res
+
+    @userRouter.post("/login")
+    async def login_user():
+        return {"message": "Login user"}
+
+    return userRouter
