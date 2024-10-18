@@ -1,13 +1,12 @@
 
+from typing import Callable
 from fastapi import APIRouter, Form
 
-from config import get_app_config
+from services.hashrepo.bcrypt_repo import bcryptHash
 from models.models import User
 from utils import http as httpUtils
 
-appConfig = get_app_config()
-
-def create_user_router(get_app_funcs: dict[str, dict[str, callable]]) -> APIRouter:
+def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]]]) -> APIRouter:
     userRouter = APIRouter()
 
     @userRouter.get("/")
@@ -20,7 +19,7 @@ def create_user_router(get_app_funcs: dict[str, dict[str, callable]]) -> APIRout
         password: str = Form()
     ):
         try:
-            hashed_password = appConfig.hashrepo.hash(password)
+            hashed_password = bcryptHash(password)
         except Exception as e:
             return httpUtils.jsonResponse({
                 "error": str(e)
@@ -35,9 +34,8 @@ def create_user_router(get_app_funcs: dict[str, dict[str, callable]]) -> APIRout
         )
 
         # TODO: save user to database
-        print(newUser)
 
-        auth_token = get_app_funcs["authrepo"]()["create_token"]({
+        auth_token = get_app_funcs()["authrepo"]()["create_token"]({
             "username": newUser.username,
         })
 
