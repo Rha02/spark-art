@@ -1,74 +1,56 @@
-import { useState } from "react";
-import { useRouter } from 'next/router';
+"use client";
 
 export default function Login() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const router = useRouter();
+    const inputDiv = "flex flex-col items-center justify-center space-y-1 w-full";
+    const inputStyle = "border-b-2 border-indigo-500 w-3/5 text-center bg-gray-100 rounded";
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-    
-        const res = await fetch("/api/login", {
+        const formData = new FormData(e.currentTarget);
+
+        
+        const username = formData.get("username") as string;
+        const password = formData.get("password") as string;
+
+        const response = await fetch("/api/login", {
             method: "POST",
-            headers: {
-                "Content": "application/json"
-            },
-            body: JSON.stringify({ username, password })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username,
+                password
+            })
         });
 
-        const data = await res.json();
-
-        if (res.ok) {
-            router.push("/dashboard");
+        if (response.ok) {
+            window.location.href = "/dashboard";
         } else {
-            setError(data.errors.message || "Error occurred");
+            alert("Login failed. Please check your credentials and try again.");
         }
     };
 
     return (
-        <div style={{ maxWidth: "400px", margin: "0 auto", padding: "2rem" }}>
-            <h1>Login</h1>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="username">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                        style={{ width: "100%", padding: "0.5rem", marginBottom: "1rem" }}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        style={{ width: "100%", padding: "0.5rem", marginBottom: "1rem" }}
-                    />
-                </div>
-                <button
-                    type="submit"
-                    style={{
-                        backgroundColor: "#0070f3",
-                        color: "white",
-                        padding: "0.75rem 1.5rem",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                    }}
-                >
-                    Login
-                </button>
-            </form>
-        </div>
+        <main>
+            <h1 className="text-center text-4xl pt-8 font-semibold text-indigo-500">Login</h1>
+            <div className="flex justify-center mt-4">
+                <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center py-8 w-1/2 xl:w-1/3 border-4 space-y-4">
+                    <div className={inputDiv}>
+                        <label htmlFor="username" className="text-indigo-500 text-lg">Username</label>
+                        <input type="text" name="username" id="username" className={inputStyle} required />
+                    </div>
+                    <div className={inputDiv}>
+                        <label htmlFor="password" className="text-indigo-500 text-lg">Password</label>
+                        <input type="password" name="password" id="password" className={inputStyle} required />
+                    </div>
+                    <div className={inputDiv}>
+                        <button type="submit" className="bg-indigo-500 text-white p-2 rounded-md w-64 hover:bg-indigo-600 transition ease-in-out duration-150">Login</button>
+                    </div>
+                    <div>
+                        <p className="text-black-500">Don't have an account?
+                            <a href="/register" className="ml-1 text-indigo-500 underline">Register</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </main>
     );
 }
-git 
