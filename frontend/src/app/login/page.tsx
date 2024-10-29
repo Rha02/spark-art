@@ -45,7 +45,7 @@ export default function Login() {
                         <button type="submit" className="bg-indigo-500 text-white p-2 rounded-md w-64 hover:bg-indigo-600 transition ease-in-out duration-150">Login</button>
                     </div>
                     <div>
-                        <p className="text-black-500">Don't have an account?
+                        <p className="text-black-500">Don&apos;t have an account?
                             <a href="/register" className="ml-1 text-indigo-500 underline">Register</a>
                         </p>
                     </div>
