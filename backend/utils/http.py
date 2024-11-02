@@ -1,26 +1,24 @@
-import json
 
-from fastapi import Response
+from fastapi import HTTPException
+from fastapi.responses import JSONResponse
 
-def jsonResponse(data: dict, status: int = 200) -> Response:
-    return Response(
-        content=json.dumps(data),
-        status_code=status,
-        headers={
-            "Content-Type": "application/json"
-        }
+def jsonResponse(data: dict, status: int = 200) -> JSONResponse:
+    return JSONResponse(
+        content=data,
+        status_code=status
     )
 
-class ErrorResponses:
-    INVALID_AUTH_TOKEN = jsonResponse({
-        "error": "Invalid authorization header"
-    }, 401)
-    USER_NOT_FOUND = jsonResponse({
-        "error": "User not found"
-    }, 404)
-    INCORRECT_PASSWORD = jsonResponse({
-        "error": "Incorrect password"
-    }, 401)
-    FORBIDDEN = jsonResponse({
-        "error": "Unauthorized"
-    }, 403)
+def raise_error(message: str, status: int = 400):
+    return HTTPException(status_code=status, detail=message)
+
+def raise_invalid_auth_token():
+    return raise_error("Invalid authorization token", 401)
+
+def raise_user_not_found():
+    return raise_error("User not found", 404)
+
+def raise_incorrect_password():
+    return raise_error("Incorrect password", 400)
+
+def raise_forbidden():
+    return raise_error("Unauthorized", 403)

@@ -1,6 +1,6 @@
 
 from typing import Callable
-from fastapi import APIRouter, Form
+from fastapi import APIRouter, Form, HTTPException
 
 from services.hashrepo.bcrypt_repo import bcryptHash
 from models.models import User
@@ -18,12 +18,15 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
         username: str = Form(),
         password: str = Form()
     ):
+        # TODO: Add validation for username and password
+        if password == "":
+            return httpUtils.raise_error("Password is required", 400)
+        
         try:
             hashed_password = bcryptHash(password)
         except Exception as e:
-            return httpUtils.jsonResponse({
-                "error": str(e)
-            }, 500)
+            print(e)
+            return httpUtils.raise_error("Error hashing password", 500)
         
         newUser = User(
             id=0,
