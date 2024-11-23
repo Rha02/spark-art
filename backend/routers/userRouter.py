@@ -6,6 +6,8 @@ from services.hashrepo.bcrypt_repo import bcryptHash
 from models.models import User
 from utils import http as httpUtils
 
+from dbrepo import postgresdb as db
+
 def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]]]) -> APIRouter:
     userRouter = APIRouter()
 
@@ -36,7 +38,9 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
             createdAt=""
         )
 
-        # TODO: save user to database
+        # TODO: Set default profile image url
+        # TODO: Handle errors
+        newUser = db.create_user(get_app_funcs()["dbconn"](), newUser)
 
         auth_token = get_app_funcs()["authrepo"]()["create_token"]({
             "username": newUser.username,

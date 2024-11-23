@@ -1,12 +1,12 @@
 from psycopg import Connection
 
-from backend.models.models import User
+from models.models import User
 
 def create_user(conn: Connection, user: User) -> User:
     with conn.cursor() as cur:
         cur.execute(
-            "INSERT INTO users (username, password, profile_image_url, created_at) VALUES (%s, %s, %s, %s) RETURNING id",
-            (user.username, user.password, user.profileImageUrl, user.createdAt)
+            "INSERT INTO users (username, password, image_url) VALUES (%s, %s, %s) RETURNING id",
+            (user.username, user.password, user.profileImageUrl)
         )
         user.id = cur.fetchone()[0]
         conn.commit()
