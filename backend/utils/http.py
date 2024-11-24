@@ -1,5 +1,5 @@
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse
 
 def jsonResponse(data: dict, status: int = 200) -> JSONResponse:
@@ -7,6 +7,13 @@ def jsonResponse(data: dict, status: int = 200) -> JSONResponse:
         content=data,
         status_code=status
     )
+
+def get_auth_token(request: Request) -> str:
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return ""
+    
+    return auth_header.split(" ")[1]
 
 def raise_error(message: str, status: int = 400):
     return HTTPException(status_code=status, detail=message)
