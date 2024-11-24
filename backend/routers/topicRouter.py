@@ -13,7 +13,7 @@ def create_topic_router(get_app_funcs: Callable[[], dict[str, dict[str, callable
 
     @topicsRouter.get("/topics")
     async def get_topics():
-        return []
+        return db.get_topics(get_app_funcs()["dbconn"]())
     
     @topicsRouter.post("/topics")
     async def create_topic(
@@ -33,25 +33,28 @@ def create_topic_router(get_app_funcs: Callable[[], dict[str, dict[str, callable
         if not text:
             return httpUtils.raise_error("Text is required", 400)
         
-        return Topic(
-            id=0,
-            text=text,
-            creatorId=int(payload["user_id"]),
-            createdAt=""
+        topic = db.create_topic(
+            get_app_funcs()["dbconn"](),
+            Topic(
+                id=0,
+                text=text,
+                creatorId=payload["user_id"],
+                createdAt=""
+            )
         )
+
+        return topic
     
     @topicsRouter.get("/topics/{topic_id}")
     async def get_topic(topic_id: int):
-        return Topic(
-            id=topic_id,
-            title="Test",
-            description="Test",
-            creatorId=0,
-            createdAt=""
-        )
+        topic = db.get_topic_by_id(get_app_funcs()["dbconn"](), topic_id)
+        if not topic:
+            return httpUtils.raise_not_found("Topic not found")
+        
+        return topic
     
     @topicsRouter.get("/users/{user_id}/topics")
     async def get_user_topics(user_id: int):
-        return []
+        return db.get_topics_by_user_id(get_app_funcs()["dbconn"](), user_id)
 
     return topicsRouter
