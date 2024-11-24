@@ -1,6 +1,6 @@
 from psycopg import Connection
 
-from models.models import User
+from models.models import Topic, User
 
 def create_user(conn: Connection, user: User) -> User:
     with conn.cursor() as cur:
@@ -57,3 +57,58 @@ def update_user_image_url(conn: Connection, user_id: int, image_url: str) -> Use
         password=user[3],
         createdAt=str(user[4])
     ) if user else None
+
+def get_topics(conn: Connection) -> list[Topic]:
+    with conn.cursor() as cur:
+        cur.execute("SELECT * FROM topics")
+        topics = cur.fetchall()
+    return [
+        Topic(
+            id=topic[0],
+            text=topic[1],
+            createdAt=str(topic[2]),
+            creatorId=topic[3],
+        ) for topic in topics
+    ]
+
+def create_topic(conn: Connection, topic: Topic) -> Topic:
+    with conn.cursor() as cur:
+        cur.execute(
+            "INSERT INTO topics (text, user_id) VALUES (%s, %s) RETURNING id, created_at",
+            (topic.text, topic.creatorId)
+        )
+        topic_id, topic_createdAt = cur.fetchone()
+        topic.id = topic_id
+        topic.createdAt = str(topic_createdAt)
+        conn.commit()
+    return topic
+
+def get_topic_by_id(conn: Connection, topic_id: int) -> Topic | None:
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT * FROM topics WHERE id = %s",
+            (topic_id,)
+        )
+        topic = cur.fetchone()
+    return Topic(
+        id=topic[0],
+        text=topic[1],
+        createdAt=str(topic[2]),
+        creatorId=topic[3],
+    ) if topic else None
+
+def get_topics_by_user_id(conn: Connection, user_id: int) -> list[Topic]:
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT * FROM topics WHERE user_id = %s",
+            (user_id,)
+        )
+        topics = cur.fetchall()
+    return [
+        Topic(
+            id=topic[0],
+            text=topic[1],
+            createdAt=str(topic[2]),
+            creatorId=topic[3],
+        ) for topic in topics
+    ]
