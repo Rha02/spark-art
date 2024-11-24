@@ -22,9 +22,9 @@ def get_user_by_username(conn: Connection, username: str) -> User | None:
     return User(
         id=user[0],
         username=user[1],
-        password=user[2],
-        profileImageUrl=user[3],
-        createdAt=user[4]
+        profileImageUrl=user[2],
+        password=user[3],
+        createdAt=str(user[4])
     ) if user else None
 
 def get_user_by_id(conn: Connection, user_id: int) -> User | None:
@@ -37,7 +37,23 @@ def get_user_by_id(conn: Connection, user_id: int) -> User | None:
     return User(
         id=user[0],
         username=user[1],
-        password=user[2],
-        profileImageUrl=user[3],
-        createdAt=user[4]
+        profileImageUrl=user[2],
+        password=user[3],
+        createdAt=str(user[4])
+    ) if user else None
+
+def update_user_image_url(conn: Connection, user_id: int, image_url: str) -> User | None:
+    with conn.cursor() as cur:
+        cur.execute(
+            "UPDATE users SET image_url = %s WHERE id = %s RETURNING *",
+            (image_url, user_id)
+        )
+        user = cur.fetchone()
+        conn.commit()
+    return User(
+        id=user[0],
+        username=user[1],
+        profileImageUrl=user[2],
+        password=user[3],
+        createdAt=str(user[4])
     ) if user else None

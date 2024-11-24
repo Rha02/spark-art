@@ -1,6 +1,6 @@
 
-from typing import Callable
-from fastapi import APIRouter, Form, HTTPException
+from typing import Annotated, Callable
+from fastapi import APIRouter, File, Form, HTTPException, Query, Request, UploadFile
 
 from services.hashrepo.bcrypt_repo import bcryptHash
 from models.models import User
@@ -12,8 +12,21 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
     userRouter = APIRouter()
 
     @userRouter.get("/")
-    async def get_users():
-        return {"message": "Get authenticated user"}
+    async def get_user(request: Request):
+        auth_token = httpUtils.get_auth_token(request)
+        if not auth_token:
+            return httpUtils.raise_invalid_auth_token()
+        
+        try:
+            payload = get_app_funcs()["authrepo"]()["parse_token"](auth_token)
+        except Exception as e:
+            return httpUtils.raise_error(str(e), 401)
+        
+        user = db.get_user_by_id(get_app_funcs()["dbconn"](), payload["user_id"])
+        if not user:
+            return httpUtils.raise_user_not_found()
+        
+        return user
 
     @userRouter.post("/register")
     async def register_user(
@@ -34,7 +47,7 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
             id=0,
             username=username,
             password=hashed_password,
-            profileImageUrl="",
+            profileImageUrl="default.jpg",
             createdAt=""
         )
 
@@ -43,6 +56,7 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
         newUser = db.create_user(get_app_funcs()["dbconn"](), newUser)
 
         auth_token = get_app_funcs()["authrepo"]()["create_token"]({
+            "user_id": newUser.id,
             "username": newUser.username,
         })
 
@@ -57,4 +71,47 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
     async def login_user():
         return {"message": "Login user"}
 
+    @userRouter.get("/users")
+    async def get_user(username: str = Query(None), id: int = Query(None)):
+        if not username and not id:
+            return httpUtils.raise_error("Username or user_id is required", 400)
+        
+        if username:
+            user = db.get_user_by_username(get_app_funcs()["dbconn"](), username)
+        else:
+            user = db.get_user_by_id(get_app_funcs()["dbconn"](), id)
+
+        if not user:
+            return httpUtils.raise_error("User not found", 404)
+        return user
+    
+    @userRouter.get("/users")
+    async def get_user(user_id: int):
+        user = db.get_user_by_id(get_app_funcs()["dbconn"](), user_id)
+        if not user:
+            return httpUtils.raise_error("User not found", 404)
+        return user
+    
+    # Get file from form data
+    @userRouter.put("/users/{user_id}/image")
+    async def update_user_image(user_id: int, request: Request, image: Annotated[UploadFile, File()]):
+        auth_token = httpUtils.get_auth_token(request)
+        if not auth_token:
+            return httpUtils.raise_invalid_auth_token()
+        
+        try:
+            payload = get_app_funcs()["authrepo"]()["parse_token"](auth_token)
+        except Exception as e:
+            return httpUtils.raise_error(str(e), 401)
+        
+        if payload["user_id"] != user_id:
+            return httpUtils.raise_forbidden()
+        
+        # TODO: upload image to cloud storage
+        image_url = f"{user_id}_{image.filename}"
+
+        user = db.update_user_image_url(get_app_funcs()["dbconn"](), user_id, image_url)
+
+        return user
+    
     return userRouter
