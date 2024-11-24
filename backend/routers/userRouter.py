@@ -12,7 +12,7 @@ from dbrepo import postgresdb as db
 def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]]]) -> APIRouter:
     userRouter = APIRouter()
 
-    @userRouter.get("/")
+    @userRouter.get("/user")
     async def get_user(request: Request):
         auth_token = httpUtils.get_auth_token(request)
         if not auth_token:
@@ -82,13 +82,6 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
         else:
             user = db.get_user_by_id(get_app_funcs()["dbconn"](), id)
 
-        if not user:
-            return httpUtils.raise_error("User not found", 404)
-        return user
-    
-    @userRouter.get("/users")
-    async def get_user(user_id: int):
-        user = db.get_user_by_id(get_app_funcs()["dbconn"](), user_id)
         if not user:
             return httpUtils.raise_error("User not found", 404)
         return user
