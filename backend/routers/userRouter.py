@@ -1,7 +1,8 @@
 
 from typing import Annotated, Callable
-from fastapi import APIRouter, File, Form, HTTPException, Query, Request, UploadFile
+from fastapi import APIRouter, File, Form, Query, Request, UploadFile
 
+from services.imagerepo.azure_repo import upload_image_to_azure_storage
 from services.hashrepo.bcrypt_repo import bcryptHash
 from models.models import User
 from utils import http as httpUtils
@@ -47,7 +48,7 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
             id=0,
             username=username,
             password=hashed_password,
-            profileImageUrl="default.jpg",
+            profileImageUrl="https://sparkart.blob.core.windows.net/images/default.jpg",
             createdAt=""
         )
 
@@ -108,7 +109,10 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
             return httpUtils.raise_forbidden()
         
         # TODO: upload image to cloud storage
-        image_url = f"{user_id}_{image.filename}"
+        image_url = upload_image_to_azure_storage(
+            client=get_app_funcs()["blob_service_client"](),
+            file=image
+        )
 
         user = db.update_user_image_url(get_app_funcs()["dbconn"](), user_id, image_url)
 
