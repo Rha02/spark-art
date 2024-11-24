@@ -108,7 +108,10 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
         if payload["user_id"] != user_id:
             return httpUtils.raise_forbidden()
         
-        # TODO: upload image to cloud storage
+        # Validate image is jpg, jpeg, or png
+        if not image.content_type in ["image/jpeg", "image/jpg", "image/png"]:
+            return httpUtils.raise_error("Invalid image type. Please upload a jpg, jpeg, or png file", 400)
+        
         image_url = upload_image_to_azure_storage(
             client=get_app_funcs()["blob_service_client"](),
             file=image
