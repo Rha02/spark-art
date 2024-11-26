@@ -6,7 +6,6 @@ type getTopicsFilter = {
 };
 
 export type UserRepository = {
-    createUser: (user: User) => Promise<User>
     getAuthUser: (token: string) => Promise<User>
     getUserById: (id: number) => Promise<User>
     updateProfileIcon: (id: number, file: File) => Promise<string>

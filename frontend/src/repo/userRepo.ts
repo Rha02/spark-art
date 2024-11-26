@@ -4,19 +4,13 @@ const NewUserRepository = (host: string): UserRepository => {
     console.log("UserRepo host: " + host);
 
     return {
-        createUser: async (user) => {
-            // TODO: Implement user creation
-            return user;
-        },
         getAuthUser: async (token) => {
-            console.log("Getting auth user with token: " + token);
-            // TODO: Implement user authentication
-            return {
-                id: 1,
-                username: "test",
-                profileImageUrl: "",
-                createdAt: new Date()
-            }
+            return fetch(host + "/user", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }).then(res => res.json());
         },
         getUserById: async (id) => {
             console.log("Getting user with id: " + id);
