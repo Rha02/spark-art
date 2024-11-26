@@ -31,3 +31,4 @@ class ArtComment(BaseModel):
     artworkId: int;
     text: str;
     createdAt: str;
+    creatorIconUrl: str;

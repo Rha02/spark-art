@@ -52,7 +52,6 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
             createdAt=""
         )
 
-        # TODO: Set default profile image url
         # TODO: Handle errors
         newUser = db.create_user(get_app_funcs()["dbconn"](), newUser)
 
