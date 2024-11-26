@@ -18,7 +18,7 @@ export type Artwork = {
     likes: number;
     comments: number;
     isLiked: boolean;
-    createdAt: Date;
+    createdAt: string;
 }
 
 export type Topic = {
