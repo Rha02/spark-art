@@ -19,16 +19,47 @@ export async function POST(req: NextRequest) {
         })
     }
 
-    // TODO: Make a request to the backend to register the user
-    const token = "fake-token"
+    const formdata = new FormData();
+    formdata.append("username", username);
+    formdata.append("password", password);
 
-    const response = NextResponse.json({})
+    try {
+        const res = await fetch("http://127.0.0.1:8000/api/register", {
+            method: "POST",
+            body: formdata
+        })
 
-    response.cookies.set("authtoken", token, {
-        httpOnly: true,
-        path: "/",
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
-    })
+        if (!res.ok) {
+            return NextResponse.json({
+                errors: {
+                    message: "Something went wrong while logging in"
+                }
+            }, {
+                status: res.status
+            })
+        }
 
-    return response;
+        let token = res.headers.get("Authorization") as string
+        token = token.slice(7)
+
+        const response = NextResponse.json({})
+
+        response.cookies.set("authtoken", token, {
+            httpOnly: false,
+            path: "/",
+            expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+        })
+
+        return response;
+
+    } catch (err) {
+        console.error(err)
+        return NextResponse.json({
+            errors: {
+                message: "An error occurred while logging in"
+            }
+        }, {
+            status: 500
+        })
+    }
 }

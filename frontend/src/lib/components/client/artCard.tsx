@@ -27,7 +27,7 @@ export default function ArtCard(props: ArtCardProps) {
         <div className="items-center flex flex-col justify-center shadow">
             <div className="flex flex-col items-center py-4">
                 <a href={"/topics/" + artwork.topicId + "/art/" + artwork.id} className="mb-2">
-                    <Image src={artwork.imageUrl} alt="" width={0} height={0} className="h-48 w-48 hover:scale-105 transition duration-150" />
+                    <Image src={artwork.imageUrl} alt="" width={200} height={200} className="hover:scale-105 transition duration-150" />
                 </a>
                 <h3 className="text-xl py-1 w-full text-center">{artwork.title}</h3>
                 <div className="mb-2 text-center">

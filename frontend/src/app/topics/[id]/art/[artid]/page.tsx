@@ -23,7 +23,7 @@ export default function Topic({ params }: { params: { id: string, artid: string 
         likes: 0,
         comments: 0,
         isLiked: false,
-        createdAt: new Date()
+        createdAt: new Date().toDateString()
     });
 
     const [comments, setComments] = useState<ArtComment[]>([]);
@@ -76,11 +76,11 @@ export default function Topic({ params }: { params: { id: string, artid: string 
             <h1 className="text-3xl font-bold text-indigo-500 text-center">{artwork.title}</h1>
             <div className="flex justify-center mt-1 items-center space-x-2">
                 <a href={"/users/" + artwork.authorId} className="flex items-center space-x-2">
-                    <Image src={artwork.authorIconUrl} width={40} height={40} className="rounded-full bg-green-200" alt={""} />
+                    <Image src={artwork.authorIconUrl} width={40} height={40} className="rounded-full" alt={""} />
                     <span className="text-blue-600 hover:text-blue-700">{artwork.authorName}</span>
                 </a>
                 <span className="text-gray-500 text-sm">
-                    {artwork.createdAt.toDateString()}
+                    {new Date(artwork.createdAt).toDateString()}
                 </span>
             </div>
             <h3 className="text-center text-gray-500 text-sm">
@@ -92,7 +92,7 @@ export default function Topic({ params }: { params: { id: string, artid: string 
                 </a>
             </h3>
             <div className="flex justify-center mt-2">
-                <Image src={artwork.imageUrl} width={500} height={500} className="bg-green-200" alt={""} />
+                <Image src={artwork.imageUrl} width={500} height={500} alt={""} />
             </div>
             <div className="flex justify-center space-x-4 items-center mt-2">
                 <button onClick={handleLike} className={"p-1 rounded-md flex space-x-1 item-center " + (artwork.isLiked ? "bg-blue-500 text-white" : "border-2 border-blue-500 text-blue-500")}>

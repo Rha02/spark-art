@@ -105,7 +105,7 @@ export default function Topics() {
                             <span className="w-2/5">{topic.text}</span>
                             <span className="w-1/5">User123</span>
                             <span className="w-1/5">{topic.responses}</span>
-                            <span className="w-1/5">{topic.createdAt.toDateString()}</span>
+                            <span className="w-1/5">{new Date(topic.createdAt).toDateString()}</span>
                         </a>
                     ))}
                 </div>

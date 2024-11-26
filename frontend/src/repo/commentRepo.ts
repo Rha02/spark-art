@@ -7,42 +7,6 @@ type ArtCommentRepo = {
 }
 
 const NewCommentRepository = (host: string): ArtCommentRepo => {
-    console.log('ArtComment host: ', host);
-
-    const sampleData: ArtComment[] = [{
-        id: 1,
-        creatorId: 1,
-        creatorName: 'User 1',
-        creatorIconUrl: '',
-        artworkId: 1,
-        text: 'ArtComment 1',
-        createdAt: new Date()
-    }, {
-        id: 2,
-        creatorId: 2,
-        creatorName: 'User 2',
-        creatorIconUrl: '',
-        artworkId: 2,
-        text: 'ArtComment 2',
-        createdAt: new Date()
-    }, {
-        id: 3,
-        creatorId: 3,
-        creatorName: 'User 3',
-        creatorIconUrl: '',
-        artworkId: 3,
-        text: 'ArtComment 3',
-        createdAt: new Date()
-    }, {
-        id: 4,
-        creatorId: 4,
-        creatorName: 'User 4',
-        creatorIconUrl: '',
-        artworkId: 4,
-        text: 'ArtComment 4',
-        createdAt: new Date()
-    }];
-
     const newArtComment = () => {
         return {
             id: 0,
@@ -56,19 +20,28 @@ const NewCommentRepository = (host: string): ArtCommentRepo => {
     };
 
     const getArtCommentsByArtwork = async (artworkId: number) => {
-        return sampleData.filter((ac) => ac.artworkId === artworkId);
+        return fetch(host + "/artworks/" + artworkId + "/comments", {
+            method: "GET"
+        }).then(res => res.json());
     };
 
     const createArtComment = async (artworkId: number, text: string) => {
-        return {
-            id: 5,
-            creatorId: 5,
-            creatorName: 'User 5',
-            creatorIconUrl: '',
-            artworkId: artworkId,
-            text: text,
-            createdAt: new Date()
-        };
+        let token = document.cookie.split("; ").find(row => row.startsWith("authtoken"));
+        if (!token) {
+            throw new Error("No token found");
+        }
+        token = token.split("=")[1];
+
+        const formData = new FormData();
+        formData.append("text", text);
+
+        return fetch(host + "/artworks/" + artworkId + "/comments", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            body: formData
+        }).then(res => res.json());
     };
 
     return {

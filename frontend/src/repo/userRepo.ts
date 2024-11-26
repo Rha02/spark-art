@@ -1,38 +1,28 @@
 import { UserRepository } from "./repository";
 
 const NewUserRepository = (host: string): UserRepository => {
-    console.log("UserRepo host: " + host);
-
     return {
-        createUser: async (user) => {
-            // TODO: Implement user creation
-            return user;
-        },
         getAuthUser: async (token) => {
-            console.log("Getting auth user with token: " + token);
-            // TODO: Implement user authentication
-            return {
-                id: 1,
-                username: "test",
-                profileImageUrl: "",
-                createdAt: new Date()
-            }
+            return fetch(host + "/user", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }).then(res => res.json());
         },
         getUserById: async (id) => {
-            console.log("Getting user with id: " + id);
-            // TODO: Implement user retrieval
-            return {
-                id: id,
-                username: "test",
-                profileImageUrl: "",
-                createdAt: new Date()
-            }
+            return fetch(host + "/users?id=" + id, {
+                method: "GET"
+            }).then(res => res.json());
         },
         updateProfileIcon: async (id, file) => {
-            console.log("Updating profile icon for user: " + id);
-            console.log("File: " + file.name);
-            // TODO: Implement profile icon update
-            return "";
+            const formData = new FormData();
+            formData.append("image", file);
+
+            return fetch(host + "/users/" + id + "/image", {
+                method: "PUT",
+                body: formData
+            }).then(res => res.json());
         }
     }
 }
