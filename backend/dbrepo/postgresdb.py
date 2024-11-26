@@ -1,6 +1,6 @@
 from psycopg import Connection
 
-from models.models import Topic, User
+from models.models import Artwork, Topic, User
 
 def create_user(conn: Connection, user: User) -> User:
     with conn.cursor() as cur:
@@ -111,4 +111,159 @@ def get_topics_by_user_id(conn: Connection, user_id: int) -> list[Topic]:
             createdAt=str(topic[2]),
             creatorId=topic[3],
         ) for topic in topics
+    ]
+
+def get_artworks(conn: Connection) -> list[Artwork]:
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT a.id, a.title, a.image_url, a.created_at, a.user_id, a.topic_id, u.image_url 
+            FROM artworks a LEFT JOIN users u ON a.user_id = u.id
+            ORDER BY a.created_at DESC
+        """)
+        artworks = cur.fetchall()
+    return [
+        Artwork(
+            id=artwork[0],
+            title=artwork[1],
+            imageUrl=artwork[2],
+            createdAt=str(artwork[3]),
+            authorId=artwork[4],
+            topicId=artwork[5],
+            authorIconUrl=artwork[6]
+        ) for artwork in artworks
+    ]
+
+def create_artwork(conn: Connection, artwork: Artwork) -> Artwork:
+    with conn.cursor() as cur:
+        cur.execute(
+            "INSERT INTO artworks (title, image_url, user_id, topic_id) VALUES (%s, %s, %s, %s) RETURNING id, created_at",
+            (artwork.title, artwork.imageUrl, artwork.authorId, artwork.topicId)
+        )
+        artwork_id, artwork_createdAt = cur.fetchone()
+        artwork.id = artwork_id
+        artwork.createdAt = str(artwork_createdAt)
+        conn.commit()
+    return artwork
+
+def get_artwork_by_id(conn: Connection, artwork_id: int) -> Artwork | None:
+    with conn.cursor() as cur:
+        cur.execute("""
+                SELECT a.id, a.title, a.image_url, a.created_at, a.user_id, a.topic_id, u.image_url
+                FROM artworks a LEFT JOIN users u ON a.user_id = u.id
+                WHERE a.id = %s
+            """,
+            (artwork_id,)
+        )
+        artwork = cur.fetchone()
+    return Artwork(
+        id=artwork[0],
+        title=artwork[1],
+        imageUrl=artwork[2],
+        createdAt=str(artwork[3]),
+        authorId=artwork[4],
+        topicId=artwork[5],
+        authorIconUrl=artwork[6]
+    ) if artwork else None
+
+def get_artworks_by_user_id(conn: Connection, user_id: int) -> list[Artwork]:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+                SELECT a.id, a.title, a.image_url, a.created_at, a.user_id, a.topic_id, u.image_url
+                FROM artworks a LEFT JOIN users u ON a.user_id = u.id
+                WHERE a.user_id = %s
+                ORDER BY a.created_at DESC
+            """,
+            (user_id,)
+        )
+        artworks = cur.fetchall()
+    return [
+        Artwork(
+            id=artwork[0],
+            title=artwork[1],
+            imageUrl=artwork[2],
+            createdAt=str(artwork[3]),
+            authorId=artwork[4],
+            topicId=artwork[5],
+            authorIconUrl=artwork[6]
+        ) for artwork in artworks
+    ]
+
+def get_artworks_by_topic_id(conn: Connection, topic_id: int) -> list[Artwork]:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+                SELECT a.id, a.title, a.image_url, a.created_at, a.user_id, a.topic_id, u.image_url
+                FROM artworks a LEFT JOIN users u ON a.user_id = u.id
+                WHERE a.topic_id = %s
+                ORDER BY a.created_at DESC
+            """,
+            (topic_id,)
+        )
+        artworks = cur.fetchall()
+    return [
+        Artwork(
+            id=artwork[0],
+            title=artwork[1],
+            imageUrl=artwork[2],
+            createdAt=str(artwork[3]),
+            authorId=artwork[4],
+            topicId=artwork[5],
+            authorIconUrl=artwork[6]
+        ) for artwork in artworks
+    ]
+
+def like_artwork(conn: Connection, user_id: int, artwork_id: int, liked: bool) -> None:
+    with conn.cursor() as cur:
+        # Fetch the like record if it exists
+        cur.execute(
+            "SELECT * FROM userlikes WHERE user_id = %s AND artwork_id = %s",
+            (user_id, artwork_id)
+        )
+        like = cur.fetchone()
+        if like:
+            # Update the like record
+            cur.execute(
+                "UPDATE userlikes SET is_liked = %s WHERE user_id = %s AND artwork_id = %s",
+                (liked, user_id, artwork_id)
+            )
+        else:
+            # Create a new like record
+            cur.execute(
+                "INSERT INTO userlikes (user_id, artwork_id, is_liked) VALUES (%s, %s, %s)",
+                (user_id, artwork_id, liked)
+            )
+    return None
+
+def unlike_artwork(conn: Connection, user_id: int, artwork_id: int) -> None:
+    with conn.cursor() as cur:
+        cur.execute(
+            "DELETE FROM userlikes WHERE user_id = %s AND artwork_id = %s",
+            (user_id, artwork_id)
+        )
+        conn.commit()
+    return None
+
+def get_user_liked_artworks(conn: Connection, user_id: int):
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+                SELECT a.id, a.title, a.image_url, a.created_at, a.user_id, a.topic_id, u.image_url
+                FROM artworks a LEFT JOIN users u ON a.user_id = u.id
+                WHERE a.id IN (SELECT artwork_id FROM userlikes WHERE user_id = %s AND is_liked = TRUE)
+                ORDER BY a.created_at DESC
+            """,
+            (user_id,)
+        )
+        artworks = cur.fetchall()
+    return [
+        Artwork(
+            id=artwork[0],
+            title=artwork[1],
+            imageUrl=artwork[2],
+            createdAt=str(artwork[3]),
+            authorId=artwork[4],
+            topicId=artwork[5],
+            authorIconUrl=artwork[6]
+        ) for artwork in artworks
     ]
