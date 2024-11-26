@@ -1,6 +1,6 @@
 from psycopg import Connection
 
-from models.models import Artwork, Topic, User
+from models.models import Artwork, Topic, User, ArtComment
 
 def create_user(conn: Connection, user: User) -> User:
     with conn.cursor() as cur:
@@ -244,7 +244,7 @@ def unlike_artwork(conn: Connection, user_id: int, artwork_id: int) -> None:
         conn.commit()
     return None
 
-def get_user_liked_artworks(conn: Connection, user_id: int):
+def get_user_liked_artworks(conn: Connection, user_id: int) -> list[Artwork]:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -267,3 +267,38 @@ def get_user_liked_artworks(conn: Connection, user_id: int):
             authorIconUrl=artwork[6]
         ) for artwork in artworks
     ]
+
+def get_comments(conn: Connection, artwork_id: int) -> list[ArtComment]:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+                SELECT c.id, c.user_id, c.artwork_id, c.text, c.created_at, u.image_url
+                FROM artcomments c LEFT JOIN users u ON c.user_id = u.id
+                WHERE c.artwork_id = %s
+                ORDER BY c.created_at DESC
+            """,
+            (artwork_id,)
+        )
+        comments = cur.fetchall()
+    return [
+        ArtComment(
+            id=comment[0],
+            creatorId=comment[1],
+            artworkId=comment[2],
+            text=comment[3],
+            createdAt=str(comment[4]),
+            creatorIconUrl=comment[5]
+        ) for comment in comments
+    ]
+
+def create_comment(conn: Connection, comment: ArtComment) -> ArtComment:
+    with conn.cursor() as cur:
+        cur.execute(
+            "INSERT INTO artcomments (user_id, artwork_id, text) VALUES (%s, %s, %s) RETURNING id, created_at",
+            (comment.creatorId, comment.artworkId, comment.text)
+        )
+        comment_id, comment_createdAt = cur.fetchone()
+        comment.id = comment_id
+        comment.createdAt = str(comment_createdAt)
+        conn.commit()
+    return comment
