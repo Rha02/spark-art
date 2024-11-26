@@ -12,13 +12,14 @@ export type UserRepository = {
 }
 
 export type ArtRepository = {
-    createArtwork: (artwork: Artwork) => Promise<Artwork>
+    createArtwork: (topidId: number, title: string, image: File) => Promise<Artwork>
     getArtworks: () => Promise<Artwork[]>
     getArtworkById: (id: number) => Promise<Artwork | undefined>
     getArtworksByTopic: (topicId: number) => Promise<Artwork[]>
     getArtworksByUser: (userId: number) => Promise<Artwork[]>
     likeArtwork: (artworkId: number) => Promise<void>
     dislikeArtwork: (artworkId: number) => Promise<void>
+    unlikeArtwork: (artworkId: number) => Promise<void>
 }
 
 export type TopicRepository = {

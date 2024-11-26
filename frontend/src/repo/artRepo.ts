@@ -1,84 +1,88 @@
-import { Artwork } from "@/lib/models";
 import { ArtRepository } from "./repository";
 
 const NewArtRepository = (host: string): ArtRepository => {
-    console.log("ArtRepo host: " + host);
-
-    const sampleData: Artwork[] = [{
-        id: 1,
-        title: 'Artwork 1',
-        authorId: 1,
-        authorName: 'Author 1',
-        authorIconUrl: '',
-        topicId: 1,
-        topicText: 'Topic 1',
-        imageUrl: '',
-        likes: 100,
-        comments: 12,
-        isLiked: false,
-        createdAt: new Date(),
-    }, {
-        id: 2,
-        title: 'Artwork 2',
-        authorId: 2,
-        authorName: 'Author 2',
-        authorIconUrl: '',
-        topicId: 2,
-        topicText: 'Topic 2',
-        imageUrl: '',
-        likes: 50,
-        comments: 10,
-        isLiked: false,
-        createdAt: new Date()
-    }, {
-        id: 3,
-        title: 'Artwork 3',
-        authorId: 3,
-        authorName: 'Author 3',
-        authorIconUrl: '',
-        topicId: 3,
-        topicText: 'Topic 3',
-        imageUrl: '',
-        likes: 30,
-        comments: 10,
-        isLiked: false,
-        createdAt: new Date()
-    }, {
-        id: 4,
-        title: 'Artwork 4',
-        authorId: 4,
-        authorName: 'Author 4',
-        authorIconUrl: '',
-        topicId: 4,
-        topicText: 'Topic 4',
-        imageUrl: '',
-        likes: 20,
-        comments: 5,
-        isLiked: false,
-        createdAt: new Date()
-    }];
-
     return {
-        createArtwork: async (artwork) => {
-            return artwork;
+        createArtwork: async (topicId, title, image) => {
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("image", image);
+
+            // get auth token from cookies
+            let token = document.cookie.split("; ").find(row => row.startsWith("authtoken"));
+            if (!token) {
+                throw new Error("No token found");
+            }
+            token = token.split("=")[1];
+
+            return fetch(host + "/topics/"+topicId+"/artworks", {
+                method: "POST",
+                headers: {}
+            }).then(res => res.json());
         },
         getArtworks: async () => {
-            return fetch(host + "/artworks", {}).then(res => res.json());
+            return fetch(host + "/artworks", {
+                method: "GET"
+            }).then(res => res.json());
         },
         getArtworkById: async (id) => {
-            return sampleData.find(artwork => artwork.id === id);
+            return fetch(host + "/artworks/" + id, {
+                method: "GET"
+            }).then(res => res.json());
         },
         getArtworksByTopic: async (topicId) => {
-            return sampleData.filter(artwork => artwork.topicId === topicId);
+            return fetch(host + "/topics/"+topicId+"/artworks", {
+                method: "GET"
+            }).then(res => res.json());
         },
         getArtworksByUser: async (userId) => {
-            return sampleData.filter(artwork => artwork.authorId === userId);
+            return fetch(host + "/users/"+userId+"/artworks", {
+                method: "GET"
+            }).then(res => res.json());
         },
         likeArtwork: async (artworkId) => {
-            console.log(`User liked artwork ${artworkId}`);
+            // get auth token from cookies
+            let token = document.cookie.split("; ").find(row => row.startsWith("authtoken"));
+            if (!token) {
+                throw new Error("No token found");
+            }
+            token = token.split("=")[1];
+
+            return fetch(host + "/artworks/"+artworkId+"/like", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }).then(res => res.json());
         },
         dislikeArtwork: async (artworkId) => {
-            console.log(`User disliked artwork ${artworkId}`);
+            // get auth token from cookies
+            let token = document.cookie.split("; ").find(row => row.startsWith("authtoken"));
+            if (!token) {
+                throw new Error("No token found");
+            }
+            token = token.split("=")[1];
+
+            return fetch(host + "/artworks/"+artworkId+"/dislike", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }).then(res => res.json());
+        },
+        unlikeArtwork: async (artworkId) => {
+            // get auth token from cookies
+            let token = document.cookie.split("; ").find(row => row.startsWith("authtoken"));
+            if (!token) {
+                throw new Error("No token found");
+            }
+            token = token.split("=")[1];
+
+            return fetch(host + "/artworks/"+artworkId+"/unlike", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }).then(res => res.json());
         }
     }
 };
