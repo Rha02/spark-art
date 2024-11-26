@@ -21,7 +21,7 @@ def create_topic_router(get_app_funcs: Callable[[], dict[str, dict[str, callable
     ):
         auth_token = httpUtils.get_auth_token(request)
         if not auth_token:
-            return httpUtils.raise_invalid_auth_token()
+            raise httpUtils.raise_invalid_auth_token()
         
         try:
             payload = get_app_funcs()["authrepo"]()["parse_token"](auth_token)
@@ -42,6 +42,8 @@ def create_topic_router(get_app_funcs: Callable[[], dict[str, dict[str, callable
                 createdAt=""
             )
         )
+
+        print(topic)
 
         return topic
     

@@ -62,7 +62,9 @@ const NewArtRepository = (host: string): ArtRepository => {
         createArtwork: async (artwork) => {
             return artwork;
         },
-        getArtworks: async () => [...sampleData],
+        getArtworks: async () => {
+            return fetch(host + "/artworks", {}).then(res => res.json());
+        },
         getArtworkById: async (id) => {
             return sampleData.find(artwork => artwork.id === id);
         },

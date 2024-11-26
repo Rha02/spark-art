@@ -7,6 +7,7 @@ from driver.azure_blob_storage import create_blob_service_client
 from services.authrepo.jwt_repo import token_generator, token_parser
 from routers.router import create_router
 from driver.postgres import create_postgres_connection
+from fastapi.middleware.cors import CORSMiddleware
 
 # Get environment variables
 load_dotenv()
@@ -32,6 +33,13 @@ getAppFuncs = lambda secret_token, token_algorithm: lambda: {
 }
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(
     create_router(getAppFuncs(
         secret_token, 

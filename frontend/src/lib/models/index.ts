@@ -28,7 +28,7 @@ export type Topic = {
     creatorName: string;
     creatorIconUrl: string;
     responses: number;
-    createdAt: Date;
+    createdAt: string;
 }
 
 export type ArtComment = {

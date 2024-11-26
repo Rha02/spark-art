@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
         const response = NextResponse.json({})
 
         response.cookies.set("authtoken", token, {
-            httpOnly: true,
+            httpOnly: false,
             path: "/",
             expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
         })
