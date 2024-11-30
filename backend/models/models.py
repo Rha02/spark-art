@@ -18,6 +18,9 @@ class Artwork(BaseModel):
     topicId: int;
     imageUrl: str;
     createdAt: str;
+    likes: int;
+    comments: int;
+    isLiked: bool;
 
 class Topic(BaseModel):
     id: int

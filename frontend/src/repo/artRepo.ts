@@ -20,23 +20,59 @@ const NewArtRepository = (host: string): ArtRepository => {
             }).then(res => res.json());
         },
         getArtworks: async () => {
+            let token = document.cookie.split("; ").find(row => row.startsWith("authtoken"));
+            if (!token) {
+                throw new Error("No token found");
+            }
+            token = token.split("=")[1];
+
             return fetch(host + "/artworks", {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
             }).then(res => res.json());
         },
         getArtworkById: async (id) => {
+            let token = document.cookie.split("; ").find(row => row.startsWith("authtoken"));
+            if (!token) {
+                throw new Error("No token found");
+            }
+            token = token.split("=")[1];
+
             return fetch(host + "/artworks/" + id, {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
             }).then(res => res.json());
         },
         getArtworksByTopic: async (topicId) => {
+            let token = document.cookie.split("; ").find(row => row.startsWith("authtoken"));
+            if (!token) {
+                throw new Error("No token found");
+            }
+            token = token.split("=")[1];
+
             return fetch(host + "/topics/"+topicId+"/artworks", {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
             }).then(res => res.json());
         },
         getArtworksByUser: async (userId) => {
+            let token = document.cookie.split("; ").find(row => row.startsWith("authtoken"));
+            if (!token) {
+                throw new Error("No token found");
+            }
+            token = token.split("=")[1];
+            
             return fetch(host + "/users/"+userId+"/artworks", {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
             }).then(res => res.json());
         },
         likeArtwork: async (artworkId) => {
