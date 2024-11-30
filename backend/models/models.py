@@ -28,6 +28,9 @@ class Topic(BaseModel):
     id: int
     text: str
     creatorId: int;
+    creatorName: str;
+    creatorIconUrl: str;
+    responses: int;
     createdAt: str;
 
 class ArtComment(BaseModel):

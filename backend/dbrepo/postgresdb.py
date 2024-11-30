@@ -58,9 +58,23 @@ def update_user_image_url(conn: Connection, user_id: int, image_url: str) -> Use
         createdAt=str(user[4])
     ) if user else None
 
-def get_topics(conn: Connection) -> list[Topic]:
+def get_topics(conn: Connection, sort_by: str) -> list[Topic]:
+    order_by = "t.created_at DESC"
+    if sort_by == "most-responses":
+        order_by = "responses DESC"
+
     with conn.cursor() as cur:
-        cur.execute("SELECT * FROM topics")
+        cur.execute(
+            """
+                SELECT t.id, t."text", t.created_at, t.user_id, COUNT(DISTINCT a.id) as responses, u.username, u.image_url
+                FROM topics t
+                LEFT JOIN artworks a ON t.id = a.topic_id
+                LEFT JOIN users u ON t.user_id = u.id
+                GROUP BY t.id, u.id
+                ORDER BY %s
+            """, 
+            (order_by,)
+        )
         topics = cur.fetchall()
     return [
         Topic(
@@ -68,6 +82,9 @@ def get_topics(conn: Connection) -> list[Topic]:
             text=topic[1],
             createdAt=str(topic[2]),
             creatorId=topic[3],
+            creatorName=topic[5],
+            creatorIconUrl=topic[6],
+            responses=topic[4]
         ) for topic in topics
     ]
 
@@ -86,7 +103,12 @@ def create_topic(conn: Connection, topic: Topic) -> Topic:
 def get_topic_by_id(conn: Connection, topic_id: int) -> Topic | None:
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT * FROM topics WHERE id = %s",
+            """
+                SELECT t.id, t."text", t.created_at, t.user_id, u.username, u.image_url
+                FROM topics t
+                LEFT JOIN users u ON t.user_id = u.id
+                WHERE t.id = %s
+            """,
             (topic_id,)
         )
         topic = cur.fetchone()
@@ -95,12 +117,22 @@ def get_topic_by_id(conn: Connection, topic_id: int) -> Topic | None:
         text=topic[1],
         createdAt=str(topic[2]),
         creatorId=topic[3],
+        creatorName=topic[4],
+        creatorIconUrl=topic[5],
+        responses=0
     ) if topic else None
 
 def get_topics_by_user_id(conn: Connection, user_id: int) -> list[Topic]:
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT * FROM topics WHERE user_id = %s",
+            """
+                SELECT t.id, t."text", t.created_at, t.user_id, u.username, u.image_url, COUNT(DISTINCT a.id) as responses
+                FROM topics t
+                LEFT JOIN users u ON t.user_id = u.id
+                LEFT JOIN artworks a ON t.id = a.topic_id
+                WHERE t.user_id = %s
+                GROUP BY t.id, u.id
+            """
             (user_id,)
         )
         topics = cur.fetchall()
@@ -110,6 +142,9 @@ def get_topics_by_user_id(conn: Connection, user_id: int) -> list[Topic]:
             text=topic[1],
             createdAt=str(topic[2]),
             creatorId=topic[3],
+            creatorName=topic[4],
+            creatorIconUrl=topic[5],
+            responses=topic[6]
         ) for topic in topics
     ]
 

@@ -103,7 +103,7 @@ export default function Topics() {
                     {topics.map((topic, idx) => (
                         <a key={idx} href={"/topics/" + topic.id} className="flex justify-between p-2 shadow bg-gray-50 mb-4 hover:bg-gray-100 transition ease-in-out duration-150 space-x-4">
                             <span className="w-2/5">{topic.text}</span>
-                            <span className="w-1/5">User123</span>
+                            <span className="w-1/5">{topic.creatorName}</span>
                             <span className="w-1/5">{topic.responses}</span>
                             <span className="w-1/5">{new Date(topic.createdAt).toDateString()}</span>
                         </a>
