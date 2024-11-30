@@ -74,6 +74,11 @@ def create_artwork_router(get_app_funcs: Callable[[], dict[str, dict[str, callab
                 topicId=topic_id,
                 imageUrl=image_url,
                 createdAt="",
+                likes=0,
+                comments=0,
+                isLiked=False,
+                topicTitle="",
+                authorUsername=user.username
             )
         )
 

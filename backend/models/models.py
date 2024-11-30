@@ -21,6 +21,8 @@ class Artwork(BaseModel):
     likes: int;
     comments: int;
     isLiked: bool;
+    topicText: str;
+    authorName: str;
 
 class Topic(BaseModel):
     id: int

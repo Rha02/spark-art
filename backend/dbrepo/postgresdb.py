@@ -130,12 +130,15 @@ def get_artworks(conn: Connection, sort_by: str, curr_user_id: int) -> list[Artw
                 u.image_url AS creator_profile_picture, 
                 COUNT(DISTINCT ul.user_id) AS likes,
                 COUNT(DISTINCT c.id) AS comments,
-                EXISTS(SELECT 1 FROM userlikes WHERE user_id = %s AND artwork_id = a.id AND is_liked = TRUE) as is_liked
+                EXISTS(SELECT 1 FROM userlikes WHERE user_id = %s AND artwork_id = a.id AND is_liked = TRUE) as is_liked,
+                t."text"  as topic_title,
+                u.username as create_username
             FROM artworks a
             LEFT JOIN users u ON a.user_id = u.id
             LEFT JOIN userlikes ul ON a.id = ul.artwork_id AND ul.is_liked = TRUE
             LEFT JOIN artcomments c ON a.id = c.artwork_id
-            GROUP BY a.id, u.id
+            LEFT JOIN topics t on a.topic_id = t.id 
+            GROUP BY a.id, u.id, t.id
             ORDER BY %s
         """, (curr_user_id, order_by))
         artworks = cur.fetchall()
@@ -150,7 +153,9 @@ def get_artworks(conn: Connection, sort_by: str, curr_user_id: int) -> list[Artw
             authorIconUrl=artwork[6],
             likes=artwork[7],
             comments=artwork[8],
-            isLiked=artwork[9]
+            isLiked=artwork[9],
+            topicText=artwork[10],
+            authorName=artwork[11]
         ) for artwork in artworks
     ]
 
@@ -171,12 +176,15 @@ def get_artwork_by_id(conn: Connection, artwork_id: int, curr_user_id: int) -> A
         cur.execute("""
                 SELECT a.id, a.title, a.image_url, a.created_at, a.user_id, a.topic_id, u.image_url,
                 COUNT(ul.user_id) as likes,
-                EXISTS(SELECT 1 FROM userlikes WHERE user_id = %s AND artwork_id = a.id AND is_liked = TRUE) as is_liked
+                EXISTS(SELECT 1 FROM userlikes WHERE user_id = %s AND artwork_id = a.id AND is_liked = TRUE) as is_liked,
+                t."text",
+                u.username
                 FROM artworks a
                 LEFT JOIN users u ON a.user_id = u.id
                 LEFT JOIN userlikes ul ON a.id = ul.artwork_id
+                LEFT JOIN topics t on a.topic_id = t.id
                 WHERE a.id = %s
-                GROUP BY a.id, u.id
+                GROUP BY a.id, u.id, t.id
             """,
             (curr_user_id, artwork_id,)
         )
@@ -191,7 +199,9 @@ def get_artwork_by_id(conn: Connection, artwork_id: int, curr_user_id: int) -> A
         authorIconUrl=artwork[6],
         likes=artwork[7],
         comments=0,
-        isLiked=artwork[8]
+        isLiked=artwork[8],
+        topicText=artwork[9],
+        authorName=artwork[10]
     ) if artwork else None
 
 def get_artworks_by_user_id(conn: Connection, user_id: int, curr_user_id: int) -> list[Artwork]:
@@ -207,13 +217,16 @@ def get_artworks_by_user_id(conn: Connection, user_id: int, curr_user_id: int) -
                     u.image_url AS creator_profile_picture, 
                     COUNT(DISTINCT ul.user_id) AS likes,
                     COUNT(DISTINCT c.id) AS comments,
-                    EXISTS(SELECT 1 FROM userlikes WHERE user_id = %s AND artwork_id = a.id AND is_liked = TRUE) as is_liked
+                    EXISTS(SELECT 1 FROM userlikes WHERE user_id = %s AND artwork_id = a.id AND is_liked = TRUE) as is_liked,
+                    t."text" as topic_title,
+                    u.username
                 FROM artworks a
                 LEFT JOIN users u ON a.user_id = u.id
                 LEFT JOIN userlikes ul ON a.id = ul.artwork_id AND ul.is_liked = TRUE
                 LEFT JOIN artcomments c ON a.id = c.artwork_id
+                LEFT JOIN topics t on a.topic_id = t.id
                 WHERE a.user_id = %s
-                GROUP BY a.id, u.id
+                GROUP BY a.id, u.id, t.id
                 ORDER BY a.created_at DESC;
             """,
             (curr_user_id, user_id)
@@ -230,7 +243,9 @@ def get_artworks_by_user_id(conn: Connection, user_id: int, curr_user_id: int) -
             authorIconUrl=artwork[6],
             likes=artwork[7],
             comments=artwork[8],
-            isLiked=artwork[9]
+            isLiked=artwork[9],
+            topicText=artwork[10],
+            authorName=artwork[11]
         ) for artwork in artworks
     ]
 
@@ -248,13 +263,16 @@ def get_artworks_by_topic_id(conn: Connection, topic_id: int, curr_user_id: int)
                     u.image_url AS creator_profile_picture, 
                     COUNT(DISTINCT ul.user_id) AS likes,
                     COUNT(DISTINCT c.id) AS comments,
-                    EXISTS(SELECT 1 FROM userlikes WHERE user_id = %s AND artwork_id = a.id AND is_liked = TRUE) as is_liked
+                    EXISTS(SELECT 1 FROM userlikes WHERE user_id = %s AND artwork_id = a.id AND is_liked = TRUE) as is_liked,
+                    t."text" as topic_title,
+                    u.username
                 FROM artworks a
                 LEFT JOIN users u ON a.user_id = u.id
                 LEFT JOIN userlikes ul ON a.id = ul.artwork_id AND ul.is_liked = TRUE
                 LEFT JOIN artcomments c ON a.id = c.artwork_id
+                LEFT JOIN topics t on a.topic_id = t.id
                 WHERE a.topic_id = %s
-                GROUP BY a.id, u.id
+                GROUP BY a.id, u.id, t.id
                 ORDER BY a.created_at DESC;
             """,
             (curr_user_id, topic_id)
@@ -271,7 +289,9 @@ def get_artworks_by_topic_id(conn: Connection, topic_id: int, curr_user_id: int)
             authorIconUrl=artwork[6],
             likes=artwork[7],
             comments=artwork[8],
-            isLiked=artwork[9]
+            isLiked=artwork[9],
+            topicText=artwork[10],
+            authorName=artwork[11]
         ) for artwork in artworks
     ]
 
@@ -321,15 +341,18 @@ def get_user_liked_artworks(conn: Connection, user_id: int, curr_user_id: int) -
                     u.image_url AS creator_profile_picture, 
                     COUNT(DISTINCT ul.user_id) AS likes,
                     COUNT(DISTINCT c.id) AS comments,
-                    EXISTS(SELECT 1 FROM userlikes WHERE user_id = %s AND artwork_id = a.id AND is_liked = TRUE) as is_liked
+                    EXISTS(SELECT 1 FROM userlikes WHERE user_id = %s AND artwork_id = a.id AND is_liked = TRUE) as is_liked,
+                    t."text" as topic_title,
+                    u.username
                 FROM artworks a
                 LEFT JOIN users u ON a.user_id = u.id
                 LEFT JOIN userlikes ul ON a.id = ul.artwork_id AND ul.is_liked = TRUE
                 LEFT JOIN artcomments c ON a.id = c.artwork_id
+                LEFT JOIN topics t on a.topic_id = t.id
                 WHERE a.id IN (
                     SELECT artwork_id FROM userlikes WHERE user_id = %s AND is_liked = TRUE
                 )
-                GROUP BY a.id, u.id
+                GROUP BY a.id, u.id, t.id
                 ORDER BY a.created_at DESC;
             """,
             (curr_user_id, user_id)
@@ -346,7 +369,9 @@ def get_user_liked_artworks(conn: Connection, user_id: int, curr_user_id: int) -
             authorIconUrl=artwork[6],
             likes=artwork[7],
             comments=artwork[8],
-            isLiked=artwork[9]
+            isLiked=artwork[9],
+            topicText=artwork[10],
+            authorName=artwork[11]
         ) for artwork in artworks
     ]
 
