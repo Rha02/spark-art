@@ -138,13 +138,13 @@ export default function UserProfile({ params }: { params: { id: string } }) {
                 </div>
             ) : null}
             {activeTab === "drawn" ? (
-                <div className="grid grid-cols-5 mx-2">
-                    {drawn.map((artwork, idx) => <ArtCard key={idx} artwork={artwork} />)}
+                <div className="grid grid-cols-5 mx-2 mt-4 gap-4">
+                    {drawn.map((artwork, idx) => <ArtCard key={idx} artwork={artwork} displayTopic={true} />)}
                 </div>
             ) : null}
             {activeTab === "liked" ? (
-                <div className="grid grid-cols-5 mx-2">
-                    {liked.map((artwork, idx) => <ArtCard key={idx} artwork={artwork} />)}
+                <div className="grid grid-cols-5 mx-2 mt-4 gap-4">
+                    {liked.map((artwork, idx) => <ArtCard key={idx} artwork={artwork} displayAuthor={true} displayTopic={true} />)}
                 </div>
             ) : null}
         </main>

@@ -16,7 +16,10 @@ const NewArtRepository = (host: string): ArtRepository => {
 
             return fetch(host + "/topics/" + topicId + "/artworks", {
                 method: "POST",
-                headers: {}
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                body: formData
             }).then(res => res.json());
         },
         getArtworks: async () => {
