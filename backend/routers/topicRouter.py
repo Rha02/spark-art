@@ -12,8 +12,8 @@ def create_topic_router(get_app_funcs: Callable[[], dict[str, dict[str, callable
     topicsRouter = APIRouter()
 
     @topicsRouter.get("/topics")
-    async def get_topics():
-        return db.get_topics(get_app_funcs()["dbconn"]())
+    async def get_topics(sort_by: str = "latest"):
+        return db.get_topics(get_app_funcs()["dbconn"](), sort_by)
     
     @topicsRouter.post("/topics")
     async def create_topic(
@@ -39,11 +39,12 @@ def create_topic_router(get_app_funcs: Callable[[], dict[str, dict[str, callable
                 id=0,
                 text=text,
                 creatorId=payload["user_id"],
-                createdAt=""
+                createdAt="",
+                creatorName="",
+                creatorIconUrl="",
+                responses=0
             )
         )
-
-        print(topic)
 
         return topic
     

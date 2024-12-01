@@ -102,7 +102,7 @@ export default function Topic({ params }: { params: { id: string, artid: string 
                     <ThumbsUpIcon width={20} height={20} color={artwork.isLiked ? "#ffffff" : "#3b82f6"} />
                 </button>
                 <span className="py-1 flex text-gray-600 space-x-1 items-center">
-                    <span>{artwork.comments}</span>
+                    <span>{comments.length}</span>
                     <CommentIcon width={20} height={20} color="#4b5563" />
                 </span>
             </div>

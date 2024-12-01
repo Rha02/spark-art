@@ -4,8 +4,7 @@ import { TopicRepository } from "./repository";
 const NewTopicRepository = (host: string): TopicRepository => {
     return {
         getTopics: async (filter) => {
-            console.log(filter);
-            return fetch(host + "/topics", {
+            return fetch(host + "/topics?sort_by=" + filter?.sortType, {
                 method: "GET"
             }).then(res => res.json());
         },
@@ -15,7 +14,7 @@ const NewTopicRepository = (host: string): TopicRepository => {
             }).then(res => res.json());
         },
         getTopicsByUser: async (userId) => {
-            return fetch(host + "/topics?creatorId=" + userId, {
+            return fetch(host + "/users/" + userId + "/topics", {
                 method: "GET"
             }).then(res => res.json());
         },

@@ -44,7 +44,7 @@ export default async function Navbar() {
             <ul className="flex space-x-2">
                 <Navlink link="/dashboard" name="Dashboard" />
                 <Navlink link="/topics" name="Topics" />
-                {isAuthenticated && <Navlink link="/users/1" name="Profile" />}
+                {isAuthenticated && <Navlink link={"/users/" + user?.id} name="Profile" />}
                 {isAuthenticated && <Navlink link="/api/logout" name="Logout" />}
                 {isAuthenticated &&
                     <div>

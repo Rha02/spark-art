@@ -3,7 +3,7 @@ export type User = {
     id: number
     username: string
     profileImageUrl: string;
-    createdAt: Date;
+    createdAt: string;
 }
 
 export type Artwork = {

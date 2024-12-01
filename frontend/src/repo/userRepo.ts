@@ -15,12 +15,15 @@ const NewUserRepository = (host: string): UserRepository => {
                 method: "GET"
             }).then(res => res.json());
         },
-        updateProfileIcon: async (id, file) => {
+        updateProfileIcon: async (id, file, token) => {
             const formData = new FormData();
             formData.append("image", file);
 
             return fetch(host + "/users/" + id + "/image", {
                 method: "PUT",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
                 body: formData
             }).then(res => res.json());
         }

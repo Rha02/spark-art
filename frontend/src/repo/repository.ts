@@ -8,7 +8,7 @@ type getTopicsFilter = {
 export type UserRepository = {
     getAuthUser: (token: string) => Promise<User>
     getUserById: (id: number) => Promise<User>
-    updateProfileIcon: (id: number, file: File) => Promise<string>
+    updateProfileIcon: (id: number, file: File, token: string) => Promise<User>
 }
 
 export type ArtRepository = {
@@ -17,6 +17,7 @@ export type ArtRepository = {
     getArtworkById: (id: number) => Promise<Artwork | undefined>
     getArtworksByTopic: (topicId: number) => Promise<Artwork[]>
     getArtworksByUser: (userId: number) => Promise<Artwork[]>
+    getUsersLikedArtworks: (userId: number) => Promise<Artwork[]>
     likeArtwork: (artworkId: number) => Promise<void>
     dislikeArtwork: (artworkId: number) => Promise<void>
     unlikeArtwork: (artworkId: number) => Promise<void>

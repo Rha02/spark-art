@@ -18,11 +18,19 @@ class Artwork(BaseModel):
     topicId: int;
     imageUrl: str;
     createdAt: str;
+    likes: int;
+    comments: int;
+    isLiked: bool;
+    topicText: str;
+    authorName: str;
 
 class Topic(BaseModel):
     id: int
     text: str
     creatorId: int;
+    creatorName: str;
+    creatorIconUrl: str;
+    responses: int;
     createdAt: str;
 
 class ArtComment(BaseModel):
