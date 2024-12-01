@@ -3,7 +3,7 @@ from typing import Annotated, Callable
 from fastapi import APIRouter, File, Form, Query, Request, UploadFile
 
 from services.imagerepo.azure_repo import upload_image_to_azure_storage
-from services.hashrepo.bcrypt_repo import bcryptHash
+from services.hashrepo.bcrypt_repo import bcryptCompare, bcryptHash
 from models.models import User
 from utils import http as httpUtils
 
@@ -77,13 +77,13 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
             return httpUtils.raise_error("Username and password are required", 400)
 
         try:
-        # Fetch user from DB
+            # Fetch user from DB
             user = db.get_user_by_username(get_app_funcs()["dbconn"](), username)
             if not user:
                 return httpUtils.raise_error("Invalid username or password", 401)
         
-        # Verify pw
-            if not bcryptHash().verify(password, user.password):  
+            # Verify pw
+            if not bcryptCompare(password, user.password):
                 return httpUtils.raise_error("Invalid username or password", 401)
         
         

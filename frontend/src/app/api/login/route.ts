@@ -39,8 +39,6 @@ export async function POST(req: NextRequest) {
             })
         }
 
-        console.log(res.status)
-
         let token = res.headers.get("Authorization") as string
         token = token.slice(7)
 
