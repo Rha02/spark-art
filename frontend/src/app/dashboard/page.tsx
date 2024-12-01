@@ -40,8 +40,8 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className="flex justify-center mt-2">
-                <div className="grid grid-cols-5 w-3/4 mx-2 space-x-4 mt-8 space-y-4">
-                    {artworks.map(artwork => <ArtCard key={artwork.id} artwork={artwork} />)}
+                <div className="grid grid-cols-4 w-3/4 mx-2 gap-4">
+                    {artworks.map(artwork => <ArtCard key={artwork.id} artwork={artwork} displayAuthor={true} displayTopic={true} />)}
                 </div>
             </div>
         </main>

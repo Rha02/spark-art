@@ -8,6 +8,8 @@ import { useState } from 'react';
 
 type ArtCardProps = {
     artwork: Artwork;
+    displayTopic?: boolean;
+    displayAuthor?: boolean;
 }
 
 export default function ArtCard(props: ArtCardProps) {
@@ -27,22 +29,26 @@ export default function ArtCard(props: ArtCardProps) {
 
     return (
         <div className="items-center flex flex-col justify-center shadow">
-            <div className="flex flex-col items-center py-4">
+            <div className="flex flex-col items-center py-4 px-4">
                 <a href={"/topics/" + artwork.topicId + "/art/" + artwork.id} className="mb-2">
-                    <Image src={artwork.imageUrl} alt="" width={200} height={200} className="hover:scale-105 transition duration-150" />
+                    <Image src={artwork.imageUrl} alt="" width={150} height={150} className="hover:scale-105 transition duration-150" />
                 </a>
-                <h3 className="text-xl py-1 w-full text-center">{artwork.title}</h3>
+                <h3 className="text-lg py-1 w-full text-center">{artwork.title}</h3>
                 <div className="mb-2 text-center">
-                    <p>By:
-                        <a href={"/users/" + artwork.authorId} className="ml-1 text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">
-                            {artwork.authorName}
-                        </a>
-                    </p>
-                    <p>For topic:
-                        <a href={"/topics/" + artwork.topicId} className="ml-1 text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">
-                            {artwork.topicText}
-                        </a>
-                    </p>
+                    {(props.displayAuthor != null && props.displayAuthor) && 
+                        <p>By:
+                            <a href={"/users/" + artwork.authorId} className="ml-1 text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">
+                                {artwork.authorName}
+                            </a>
+                        </p>
+                    }
+                    {(props.displayTopic != null && props.displayTopic) && 
+                        <p>For topic:
+                            <a href={"/topics/" + artwork.topicId} className="ml-1 text-blue-600 hover:text-purple-500 transition ease-in-out duration-150">
+                                {artwork.topicText}
+                            </a>
+                        </p>
+                    }
                 </div>
                 <div className="flex justify-center space-x-4 items-center">
                     <button onClick={handleLike} className={"p-1 rounded-md flex space-x-1 item-center border-2 border-blue-500 " + (artwork.isLiked ? "bg-blue-500 text-white" : "text-blue-500")}>
