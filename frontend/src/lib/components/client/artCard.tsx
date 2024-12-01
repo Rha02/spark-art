@@ -14,13 +14,15 @@ export default function ArtCard(props: ArtCardProps) {
     const [artwork, setArtwork] = useState<Artwork>(props.artwork);
 
     const handleLike = () => {
-        ArtRepo.likeArtwork(artwork.id).then(() => {
-            if (artwork.isLiked) {
-                setArtwork({ ...artwork, likes: artwork.likes - 1, isLiked: false });
-            } else {
+        if (!artwork.isLiked) {
+            ArtRepo.likeArtwork(artwork.id).then(() => {
                 setArtwork({ ...artwork, likes: artwork.likes + 1, isLiked: true });
-            }
-        }).catch((err) => console.error(err));
+            });
+        } else {
+            ArtRepo.unlikeArtwork(artwork.id).then(() => {
+                setArtwork({ ...artwork, likes: artwork.likes - 1, isLiked: false });
+            });
+        }
     };
 
     return (
