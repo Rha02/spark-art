@@ -4,8 +4,7 @@ import { TopicRepository } from "./repository";
 const NewTopicRepository = (host: string): TopicRepository => {
     return {
         getTopics: async (filter) => {
-            console.log(filter);
-            return fetch(host + "/topics", {
+            return fetch(host + "/topics?sort_by=" + filter?.sortType, {
                 method: "GET"
             }).then(res => res.json());
         },

@@ -65,15 +65,14 @@ def get_topics(conn: Connection, sort_by: str) -> list[Topic]:
 
     with conn.cursor() as cur:
         cur.execute(
-            """
+            f"""
                 SELECT t.id, t."text", t.created_at, t.user_id, COUNT(DISTINCT a.id) as responses, u.username, u.image_url
                 FROM topics t
                 LEFT JOIN artworks a ON t.id = a.topic_id
                 LEFT JOIN users u ON t.user_id = u.id
                 GROUP BY t.id, u.id
-                ORDER BY %s
-            """, 
-            (order_by,)
+                ORDER BY {order_by}
+            """
         )
         topics = cur.fetchall()
     return [
@@ -97,6 +96,7 @@ def create_topic(conn: Connection, topic: Topic) -> Topic:
         topic_id, topic_createdAt = cur.fetchone()
         topic.id = topic_id
         topic.createdAt = str(topic_createdAt)
+        topic.creatorName = get_user_by_id(conn, topic.creatorId).username
         conn.commit()
     return topic
 

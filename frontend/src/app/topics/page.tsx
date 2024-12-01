@@ -21,9 +21,9 @@ export default function Topics() {
         console.log("TODO: update topics based on sort type");
 
         if (e.target.value === 'latest') {
-            TopicRepo.getTopics().then(topics => setTopics(topics)).catch(err => console.error(err));
+            TopicRepo.getTopics({sortType: 'latest'}).then(topics => setTopics(topics)).catch(err => console.error(err));
         } else if (e.target.value === 'most-responses') {
-            TopicRepo.getTopics().then(topics => setTopics(topics)).catch(err => console.error(err));
+            TopicRepo.getTopics({sortType: 'most-responses'}).then(topics => setTopics(topics)).catch(err => console.error(err));
         }
     };
 
