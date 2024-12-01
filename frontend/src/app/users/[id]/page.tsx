@@ -7,6 +7,12 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 export default function UserProfile({ params }: { params: { id: string } }) {
+    const [currUser, setCurrUser] = useState<User>({
+        id: -1,
+        username: "",
+        profileImageUrl: "",
+        createdAt: "",
+    });
     const [user, setUser] = useState<User>({
         id: 0,
         username: "",
@@ -29,16 +35,23 @@ export default function UserProfile({ params }: { params: { id: string } }) {
         }
         token = token.split("=")[1];
 
-        UserRepo.getAuthUser(token).then((user) => {
+        UserRepo.getUserById(parseInt(params.id)).then((user) => {
             if (user) {
                 setUser(user);
+            }
+            
+        }).catch((err) => console.error(err));
+
+        UserRepo.getAuthUser(token).then((user) => {
+            if (user) {
+                setCurrUser(user);
             }
         }).catch((err) => console.error(err));
 
         TopicRepo.getTopicsByUser(parseInt(params.id)).then((topics) => {
             setTopics(topics);
         }).catch((err) => console.error(err));
-    }, []);
+    }, [params.id]);
 
     const onBtnPress = () => {
         fileInputRef.current?.click();
@@ -90,7 +103,7 @@ export default function UserProfile({ params }: { params: { id: string } }) {
                     <p className="text-gray-500">Joined: {new Date(user.createdAt).toDateString()}</p>
                 </div>
             </div>
-            {user?.id === parseInt(params.id) ? (
+            {user?.id === currUser.id ? (
                 <div>
                     <button onClick={onBtnPress} className="ml-7 mt-2 py-1 px-2 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold rounded-lg transition ease-in-out d-150">
                         Edit Image
@@ -110,7 +123,7 @@ export default function UserProfile({ params }: { params: { id: string } }) {
                 </button>
             </div>
             {activeTab === "topics" ? (
-                <div className="grid grid-cols-6 gap-4 mt-4">
+                <div className="grid grid-cols-5 gap-4 mt-4">
                     {topics.map(topic => (
                         <div key={topic.id}>
                             <a href={"/topics/" + topic.id}>

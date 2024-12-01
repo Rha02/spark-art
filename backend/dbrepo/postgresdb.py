@@ -132,7 +132,7 @@ def get_topics_by_user_id(conn: Connection, user_id: int) -> list[Topic]:
                 LEFT JOIN artworks a ON t.id = a.topic_id
                 WHERE t.user_id = %s
                 GROUP BY t.id, u.id
-            """
+            """,
             (user_id,)
         )
         topics = cur.fetchall()

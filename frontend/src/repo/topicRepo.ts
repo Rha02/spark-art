@@ -14,7 +14,7 @@ const NewTopicRepository = (host: string): TopicRepository => {
             }).then(res => res.json());
         },
         getTopicsByUser: async (userId) => {
-            return fetch(host + "/topics?creatorId=" + userId, {
+            return fetch(host + "/users/" + userId + "/topics", {
                 method: "GET"
             }).then(res => res.json());
         },
