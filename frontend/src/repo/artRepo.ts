@@ -113,8 +113,8 @@ const NewArtRepository = (host: string): ArtRepository => {
             }
             token = token.split("=")[1];
 
-            return fetch(host + "/artworks/" + artworkId + "/unlike", {
-                method: "POST",
+            return fetch(host + "/artworks/" + artworkId + "/like", {
+                method: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + token
                 }
