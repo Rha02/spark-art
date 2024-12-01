@@ -40,6 +40,7 @@ export default function Register() {
                         <label htmlFor="username" className="text-indigo-500 text-lg">Username</label>
                         <input type="text" name="username" id="username" className={inputStyle} />
                     </div>
+           
                     <div className={inputDiv}>
                         <label htmlFor="password" className="text-indigo-500 text-lg">Password</label>
                         <input type="password" name="password" id="password" className={inputStyle} />

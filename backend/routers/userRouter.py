@@ -66,10 +66,44 @@ def create_user_router(get_app_funcs: Callable[[], dict[str, dict[str, callable]
         res.headers["Authorization"] = f"Bearer {auth_token}"
         
         return res
-
+    
     @userRouter.post("/login")
-    async def login_user():
-        return {"message": "Login user"}
+    async def login_user(   
+        username: str = Form(),
+        password: str = Form()
+    ):
+    # Validate input
+        if not username or not password:
+            return httpUtils.raise_error("Username and password are required", 400)
+
+        try:
+        # Fetch user from DB
+            user = db.get_user_by_username(get_app_funcs()["dbconn"](), username)
+            if not user:
+                return httpUtils.raise_error("Invalid username or password", 401)
+        
+        # Verify pw
+            if not bcryptHash().verify(password, user.password):  
+                return httpUtils.raise_error("Invalid username or password", 401)
+        
+        
+            auth_token = get_app_funcs()["authrepo"]()["create_token"]({
+                "user_id": user.id,
+                "username": user.username,
+        })
+
+            res = httpUtils.jsonResponse({
+                "message": "Login successful"
+            }, 200)
+            res.headers["Authorization"] = f"Bearer {auth_token}"
+
+            return res
+
+        except Exception as e:
+            print(e)
+            return httpUtils.raise_error("An error occurred during login", 500)
+
+    
 
     @userRouter.get("/users")
     async def get_user(username: str = Query(None), id: int = Query(None)):
