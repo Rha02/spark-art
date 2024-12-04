@@ -97,7 +97,7 @@ export default function UserProfile({ params }: { params: { id: string } }) {
     return (
         <main className="mt-8 mx-16">
             <div className="flex items-center">
-                <Image src={user?.profileImageUrl} width={150} height={150} className="rounded-full bg-green-200 mr-4" alt={""} />
+                <Image src={user?.profileImageUrl} width={150} height={150} className="rounded-full bg-green-200 mr-4 w-36 h-36" alt={""} />
                 <div>
                     <h1 className="text-3xl font-bold text-indigo-500">{user?.username}</h1>
                     <p className="text-gray-500">Joined: {new Date(user.createdAt).toDateString()}</p>

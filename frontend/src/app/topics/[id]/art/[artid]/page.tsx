@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Topic({ params }: { params: { id: string, artid: string } }) {
-    const artID = parseInt(params.id);
+    const artID = parseInt(params.artid);
     if (isNaN(artID)) {
         window.location.href = "/topics";
     }
@@ -64,7 +64,7 @@ export default function Topic({ params }: { params: { id: string, artid: string 
         submitButton.disabled = true;
 
         CommentRepo.createArtComment(artID, text).then((c) => {
-            setComments([...comments, c]);
+            setComments([c, ...comments]);
             textarea.value = "";
         }).catch((err) => console.error(err)).finally(() => {
             submitButton.disabled = false;
@@ -76,7 +76,7 @@ export default function Topic({ params }: { params: { id: string, artid: string 
             <h1 className="text-3xl font-bold text-indigo-500 text-center">{artwork.title}</h1>
             <div className="flex justify-center mt-1 items-center space-x-2">
                 <a href={"/users/" + artwork.authorId} className="flex items-center space-x-2">
-                    <Image src={artwork.authorIconUrl} width={40} height={40} className="rounded-full" alt={""} />
+                    <Image src={artwork.authorIconUrl} width={40} height={40} className="rounded-full h-12 w-12" alt={""} />
                     <span className="text-blue-600 hover:text-blue-700">{artwork.authorName}</span>
                 </a>
                 <span className="text-gray-500 text-sm">
@@ -113,12 +113,12 @@ export default function Topic({ params }: { params: { id: string, artid: string 
                     <button type="submit" className="px-3 bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Send</button>
                 </form>
             </div>
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-center mt-2 mb-24">
                 <ul className="w-2/3 space-y-4">
-                    {comments.map((c, idx) => (
-                        <li key={idx} className="bg-gray-100 py-2 px-3 rounded shadow">
+                    {comments.map(c => (
+                        <li key={c.id} className="bg-gray-100 py-2 px-3 rounded shadow">
                             <a href={"/users/" + c.creatorId} className="flex items-center space-x-2">
-                                <Image src={c.creatorIconUrl} width={40} height={40} className="rounded-full bg-green-200" alt={""} />
+                                <Image src={c.creatorIconUrl} width={40} height={40} className="rounded-full bg-green-200 h-12 w-12" alt={""} />
                                 <span className="text-blue-600 hover:text-blue-700">{c.creatorName}</span>
                             </a>
                             <p>{c.text}</p>

@@ -154,7 +154,7 @@ def get_artworks(conn: Connection, sort_by: str, curr_user_id: int) -> list[Artw
         order_by = "likes DESC"
 
     with conn.cursor() as cur:
-        cur.execute("""
+        cur.execute(f"""
             SELECT 
                 a.id AS artwork_id, 
                 a.title AS artwork_title, 
@@ -174,8 +174,8 @@ def get_artworks(conn: Connection, sort_by: str, curr_user_id: int) -> list[Artw
             LEFT JOIN artcomments c ON a.id = c.artwork_id
             LEFT JOIN topics t on a.topic_id = t.id 
             GROUP BY a.id, u.id, t.id
-            ORDER BY %s
-        """, (curr_user_id, order_by))
+            ORDER BY {order_by};
+        """, (curr_user_id,))
         artworks = cur.fetchall()
     return [
         Artwork(
@@ -416,7 +416,7 @@ def get_comments(conn: Connection, artwork_id: int) -> list[ArtComment]:
     with conn.cursor() as cur:
         cur.execute(
             """
-                SELECT c.id, c.user_id, c.artwork_id, c.text, c.created_at, u.image_url
+                SELECT c.id, c.user_id, c.artwork_id, c.text, c.created_at, u.image_url, u.username
                 FROM artcomments c LEFT JOIN users u ON c.user_id = u.id
                 WHERE c.artwork_id = %s
                 ORDER BY c.created_at DESC
@@ -431,7 +431,8 @@ def get_comments(conn: Connection, artwork_id: int) -> list[ArtComment]:
             artworkId=comment[2],
             text=comment[3],
             createdAt=str(comment[4]),
-            creatorIconUrl=comment[5]
+            creatorIconUrl=comment[5],
+            creatorName=comment[6]
         ) for comment in comments
     ]
 

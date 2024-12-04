@@ -17,9 +17,9 @@ export default function Dashboard() {
         setSortType(e.target.value);
 
         if (e.target.value === 'latest') {
-            ArtRepo.getArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
+            ArtRepo.getArtworks("latest").then(artworks => setArtworks(artworks)).catch(err => console.error(err));
         } else if (e.target.value === 'most-liked') {
-            ArtRepo.getArtworks().then(artworks => setArtworks(artworks)).catch(err => console.error(err));
+            ArtRepo.getArtworks("most-liked").then(artworks => setArtworks(artworks)).catch(err => console.error(err));
         }
     };
 

@@ -49,7 +49,11 @@ export default function TopicPage({ params }: { params: { id: string } }) {
         form.reset();
 
         ArtRepo.createArtwork(topicId, title, image).then((artwork) => {
-            setArtworks([artwork, ...artworks]);
+            setArtworks((prev) => {
+                const newArtworks = [...prev];
+                newArtworks.unshift(artwork);
+                return newArtworks;
+            });
             setModalOpen(false);
         }).catch((err) => console.error(err));
     };
@@ -58,7 +62,7 @@ export default function TopicPage({ params }: { params: { id: string } }) {
         <main className="mx-36">
             <h1 className="text-2xl pt-8 text-indigo-500 font-bold">{topic.text}</h1>
             <div className="mt-2 flex items-center space-x-2">
-                <Image src={topic.creatorIconUrl} width={40} height={40} className="rounded-full" alt={""} />
+                <Image src={topic.creatorIconUrl} width={40} height={40} className="rounded-full h-12 w-12" alt={""} />
                 <span className="text-gray-500">
                     <a href={"/users/"+topic.creatorId}>{topic.creatorName}</a>
                 </span>
@@ -72,7 +76,7 @@ export default function TopicPage({ params }: { params: { id: string } }) {
             </div>
             <h2 className="text-xl text-indigo-500 font-semibold mt-2">Responses:</h2>
             <div className="grid grid-cols-4 mx-2 gap-4 mt-2">
-                {artworks.map((artwork, idx) => <ArtCard key={idx} artwork={artwork} displayAuthor={true} />)}
+                {artworks.map(artwork => <ArtCard key={artwork.id} artwork={artwork} displayAuthor={true} />)}
             </div>
             {modalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

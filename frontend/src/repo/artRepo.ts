@@ -22,14 +22,14 @@ const NewArtRepository = (host: string): ArtRepository => {
                 body: formData
             }).then(res => res.json());
         },
-        getArtworks: async () => {
+        getArtworks: async (sortType?: string) => {
             let token = document.cookie.split("; ").find(row => row.startsWith("authtoken"));
             if (!token) {
                 throw new Error("No token found");
             }
             token = token.split("=")[1];
 
-            return fetch(host + "/artworks", {
+            return fetch(host + "/artworks?sort_by=" + sortType, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token
