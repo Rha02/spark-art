@@ -40,3 +40,4 @@ class ArtComment(BaseModel):
     text: str;
     createdAt: str;
     creatorIconUrl: str;
+    creatorName: str;

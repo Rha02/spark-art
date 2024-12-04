@@ -44,7 +44,8 @@ def create_comment_router(get_app_funcs: Callable[[], dict[str, dict[str, callab
             artworkId=artwork_id,
             text=text,
             createdAt="",
-            creatorIconUrl=user.profileImageUrl
+            creatorIconUrl=user.profileImageUrl,
+            creatorName=user.username
         ))
         
         return artcomment
